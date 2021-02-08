@@ -1,4 +1,6 @@
 /vendor/
+/sailmysql/
+/sailredis/
 node_modules/
 npm-debug.log
 yarn-error.log
