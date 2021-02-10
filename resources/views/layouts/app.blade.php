@@ -9,14 +9,16 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <link rel="icon" href="{{asset('img/cheetah-logo.jpg')}}">
+
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{{asset('lib/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
-    <link href="{{asset('css/jquery.dataTables.min.css')}}" rel="stylesheet">
+    <link href="{{asset('lib/jquery-datatables/jquery.dataTables.min.css')}}" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -38,13 +40,15 @@
                 <div class="container-fluid">
                     <!-- Page Content -->
                     <main>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    {{ $slot }}
-                                </div>
+
+                        <h1 class="h3 mb-4 text-gray-800">{{$title ?? ''}}</h1>
+
+                        <div class="row">
+                            <div class="col">
+                                {{ $slot }}
                             </div>
                         </div>
+
                     </main>
                 </div>
                 <!-- /.container-fluid -->
@@ -65,7 +69,7 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('lib/jquery/jquery.min.js')}}"></script>
@@ -76,7 +80,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
-    <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('lib/jquery-datatables/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
     @yield('scripts')
 </body>

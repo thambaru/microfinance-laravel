@@ -1,7 +1,18 @@
 <x-app-layout>
+
+  <x-slot name="title">
+    List of Customers
+    <a href="{{route('customers.create')}}" class="btn btn-success btn-icon-split">
+      <span class="icon text-white-50">
+        <i class="fas fa-plus"></i>
+      </span>
+      <span class="text">Create</span>
+    </a>
+  </x-slot>
+
   <div class="card">
     <div class="card-body">
-      <table id="table_id" class="display">
+      <table id="customer-list" class="display">
         <thead>
           <tr>
             <th>#</th>
@@ -21,7 +32,7 @@
   @section('scripts')
   <script>
     $(document).ready(function() {
-      $('#table_id').DataTable({
+      $('#customer-list').DataTable({
         ajax: {
           url: '{{route("customers.index",["ajax"=>true])}}',
           dataSrc: 'customers'
