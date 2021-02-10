@@ -78,13 +78,7 @@
     <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
     <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
-    @once
-    @push('scripts')
-    @endpush
-    @endonce
+    @yield('scripts')
 </body>
-
-</html>
-
 
 </html>

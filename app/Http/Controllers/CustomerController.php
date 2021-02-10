@@ -12,9 +12,11 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('customers.index');
+        $customers = Customer::all();
+
+        return !empty($request->ajax) ? compact('customers') : view('customers.index');
     }
 
     /**
