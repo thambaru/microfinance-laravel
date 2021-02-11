@@ -14,9 +14,12 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        if (empty($request->ajax))
+            return view('customers.index');
+
         $customers = Customer::all();
 
-        return !empty($request->ajax) ? compact('customers') : view('customers.index');
+        return compact('customers');
     }
 
     /**
@@ -42,7 +45,9 @@ class CustomerController extends Controller
             'nic' => 'required',
         ]);
 
-        $customer = empty($request->id) ? new Customer() : Customer::id($request->id);
+        $isEdit = empty($request->id);
+
+        $customer = $isEdit ? new Customer() : Customer::find($request->id);
 
         $customer->full_name = $request->full_name;
         $customer->email = $request->email;
@@ -77,7 +82,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return view('customers.form', compact('customer'));
     }
 
     /**
@@ -100,6 +105,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+
+        return redirect()->route('customers.index')->with('status',"$customer->full_name was deleted.");
     }
 }

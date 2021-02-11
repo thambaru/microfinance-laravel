@@ -10,6 +10,12 @@
     </a>
   </x-slot>
 
+  @if (session('status'))
+  <div class="alert alert-success">
+    {{session('status')}}
+  </div>
+  @endif
+
   <div class="card">
     <div class="card-body">
       <table id="customer-list" class="display">
@@ -32,7 +38,7 @@
   @section('scripts')
   <script>
     $(document).ready(function() {
-      $('#customer-list').DataTable({
+      var table = $('#customer-list').DataTable({
         ajax: {
           url: '{{route("customers.index",["ajax"=>true])}}',
           dataSrc: 'customers'
@@ -56,6 +62,13 @@
             data: 'address'
           },
         ]
+      });
+
+
+      $('#customer-list tbody').on('click', 'tr', function() {
+        var data = table.row(this).data();
+
+        window.location.href = `{{route('customers.index')}}/${data.id}/edit`;
       });
     });
   </script>
