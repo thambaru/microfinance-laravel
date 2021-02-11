@@ -88,10 +88,12 @@ $isEdit = !empty($customer);
                     @endif
                 </div>
             </form>
+            @if($isEdit)
             <form id="customer-delete-form" action="{{ route('customers.destroy', $customer->id) }}" method="POST" class="d-none">
                 @method('DELETE')
                 @csrf
             </form>
+            @endif
         </div>
     </div>
 </x-app-layout>
