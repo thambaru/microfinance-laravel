@@ -71,7 +71,7 @@ $isEdit = !empty($customer);
                         <label class="col-form-label">{{@$field['label']}}</label>
                     </div>
                     <div class="col">
-                        <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} @if($isEdit) value="{{$customer[$field['name']]}}" @endif>
+                        <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} @if($isEdit) value="@if($isEdit){{ $customer[$field['name']] }}@else{{ old($field['name']) }}@endif" @endif>
                     </div>
                 </div>
                 @endforeach
@@ -82,8 +82,7 @@ $isEdit = !empty($customer);
                     </div>
                     @if($isEdit)
                     <div class="col-1 text-center">
-                        <a href="#" class="btn btn-danger" onclick="event.preventDefault(); document.getElementById('customer-delete-form').submit();"><i class="fa fa-trash"></i> Delete</a>
-
+                        <a href="#" class="btn btn-danger" onclick="triggerDeleteForm(event, 'customer-delete-form')"><i class="fa fa-trash"></i> Delete</a>
                     </div>
                     @endif
                 </div>
