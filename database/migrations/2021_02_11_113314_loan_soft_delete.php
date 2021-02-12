@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUserLoanRelation extends Migration
+class LoanSoftDelete extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddUserLoanRelation extends Migration
     public function up()
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->foreignId('rep_id')->constrained('users')->after('customer_id');
+            $table->softDeletes();
         });
     }
 
@@ -26,7 +26,7 @@ class AddUserLoanRelation extends Migration
     public function down()
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->dropForeign(['rep_id']);
+            $table->dropSoftDeletes();
         });
     }
 }

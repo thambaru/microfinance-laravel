@@ -38,6 +38,18 @@ use App\Libraries\Common;
             </div>
         </div>
     </li>
+    <li class="nav-item @if(Common::isRoute('loans')) active @endif">
+        <a class="nav-link @if(!Common::isRoute('loans')) collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseLoans" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-money-bill"></i>
+            <span>Loans</span>
+        </a>
+        <div id="collapseLoans" class="collapse @if(Common::isRoute('loans')) show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{route('loans.index')}}">List All</a>
+                <a class="collapse-item" href="{{route('loans.create')}}">Create</a>
+            </div>
+        </div>
+    </li>
 
 </ul>
 <!-- End of Sidebar -->

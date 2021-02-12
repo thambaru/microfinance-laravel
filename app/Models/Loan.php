@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Customer extends Model
+class Loan extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    public function loans()
+    public function customer()
     {
-        return $this->hasMany(Loan::class);
+        return $this->belongsTo(Customer::class);
     }
 }
