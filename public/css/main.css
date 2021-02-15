@@ -1,4 +1,4 @@
-#customer-list>tbody>tr>td:nth-child(2) {
+[id*="-list"]>tbody>tr>td:nth-child(2) {
     text-decoration: underline;
     color: #335aca;
     cursor: pointer;
