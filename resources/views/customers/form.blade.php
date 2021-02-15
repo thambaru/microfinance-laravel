@@ -73,7 +73,7 @@ $isEdit = !empty($customer);
                                 <label class="col-form-label">{{@$field['label']}}</label>
                             </div>
                             <div class="col">
-                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} @if($isEdit) value="@if($isEdit){{ $customer[$field['name']] }}@else{{ old($field['name']) }}@endif" @endif>
+                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} value="@if($isEdit){{ $customer[$field['name']] }}@else{{ old($field['name']) }}@endif">
                             </div>
                         </div>
                         @endforeach

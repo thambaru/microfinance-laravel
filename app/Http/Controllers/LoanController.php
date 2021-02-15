@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guarantor;
 use App\Models\Loan;
 use Illuminate\Http\Request;
 
@@ -40,6 +41,8 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
+        $isEdit = empty($request->id);
+
         $fields = [
             'customer_id' => 'required|numeric',
             'rep_id' => 'required|numeric',
@@ -48,18 +51,54 @@ class LoanController extends Controller
             'start_date' => 'required',
             'installments' => 'required',
             'rental' => 'required',
+            'proof_doc' => 'required|file',
         ];
 
-        $request->validate($fields);
+        $guarantorFields = [
+            // 'guarantors.*.full_name' => 'required',
+            'guarantors.*.nic' => 'required_with:guarantors.*.full_name',
+            'guarantors.*.email' => 'email' . $isEdit ? '' : '|unique:guaranters',
+        ];
 
-        $isEdit = empty($request->id);
+        $request->validate(array_merge($fields, $guarantorFields));
+
 
         $loan = $isEdit ? new Loan() : Loan::find($request->id);
 
-        foreach ($fields as $key => $val)
-            $loan->$key = $request->$key;
+        $loan->customer_id = $request->customer_id;
+        $loan->rep_id = $request->rep_id;
+        $loan->loan_amount = $request->loan_amount;
+        $loan->int_rate_mo = $request->int_rate_mo;
+        $loan->installments = $request->installments;
+        $loan->start_date = $request->start_date;
+        $loan->rental = $request->rental;
 
         $loan->save();
+
+        $fileName = "$loan->id" . time() . '_' . $request->proof_doc->getClientOriginalName();
+
+        $request->file('proof_doc')->storeAs('uploads', $fileName, 'public');
+
+
+        if ($isEdit)
+            $loan->guarantors()->delete();
+
+        foreach ($request->guarantors as $guarantor) {
+
+            if (empty($guarantor['full_name']))
+                continue;
+
+            $newGuarantor = new Guarantor();
+
+            $newGuarantor->full_name = $guarantor['full_name'];
+            $newGuarantor->profession = $guarantor['profession'];
+            $newGuarantor->nic = $guarantor['nic'];
+            $newGuarantor->email = $guarantor['email'];
+            $newGuarantor->address = $guarantor['address'];
+            $newGuarantor->phone_num = $guarantor['phone_num'];
+
+            $loan->guarantors()->save($newGuarantor);
+        }
 
         return redirect()->back()->with('status', "success");
     }

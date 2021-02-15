@@ -40,12 +40,13 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        $isEdit = empty($request->id);
+
         $request->validate([
             'full_name' => ['required', 'max:255'],
             'nic' => 'required',
+            'email' => 'email' . $isEdit ? '' : '|unique:customers'
         ]);
-
-        $isEdit = empty($request->id);
 
         $customer = $isEdit ? new Customer() : Customer::find($request->id);
 
@@ -107,6 +108,6 @@ class CustomerController extends Controller
     {
         $customer->delete();
 
-        return redirect()->route('customers.index')->with('status',"$customer->full_name was deleted.");
+        return redirect()->route('customers.index')->with('status', "$customer->full_name was deleted.");
     }
 }

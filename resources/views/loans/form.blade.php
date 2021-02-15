@@ -18,7 +18,7 @@ $isEdit = !empty($loan);
     </div>
     @endif
 
-    <form action="{{route('loans.store')}}" method="POST">
+    <form action="{{route('loans.store')}}" method="POST" enctype="multipart/form-data">
         <div class="row">
             <div class="col-8 mx-auto">
                 <div class="card">
@@ -47,26 +47,26 @@ $isEdit = !empty($loan);
                                 'attributes' => 'required mask-money'
                             ],
                             [
-                                'label' => 'Interest (% p.m.)',
+                                'label' => 'Interest (%)',
                                 'name' => 'int_rate_mo',
                                 'attributes' => 'required mask-money'
+                            ],
+                            [
+                                'label' => 'Pay in Months',
+                                'name' => 'installments',
+                                'type' => 'number',
+                                'attributes' => 'required min=1'
+                            ],
+                            [
+                                'label' => 'Monthly Rental',
+                                'name' => 'rental',
+                                'attributes' => 'readonly mask-money'
                             ],
                             [
                                 'label' => 'Starting Date',
                                 'name' => 'start_date',
                                 'type' => 'date',
                                 'attributes' => 'required'
-                            ],
-                            [
-                                'label' => 'Installment Months',
-                                'name' => 'installments',
-                                'type' => 'number',
-                                'attributes' => 'required min=0'
-                            ],
-                            [
-                                'label' => 'Rental',
-                                'name' => 'rental',
-                                'attributes' => 'required mask-money'
                             ],
                             [
                                 'label' => 'Sales Rep',
@@ -79,8 +79,7 @@ $isEdit = !empty($loan);
                             [
                                 'label' => 'Proof document',
                                 'name' => 'proof_doc',
-                                'type' => 'file',
-                                'attributes' => 'required'
+                                'type' => 'file'
                             ],
                         ];
 
@@ -93,15 +92,15 @@ $isEdit = !empty($loan);
                             <div class="col">
                                 @switch(@$field['type'])
                                 @case('select')
-                                <select class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} value="@if($isEdit){{ $loan[$field['name']] }}@else{{ old($field['name']) }}@endif">
+                                <select class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} value="{{ old($field['name'] , @$loan[$field['name']]) }}">
                                     <option>Select {{@$field['label']}}</option>
                                     @foreach($field['selectOptions'] as $option)
-                                    <option value="{{$option->id}}" @if($isEdit && $option->id == $loan[$field['name']]){{ 'selected' }}@endif>{{$option[$field['selectOptionNameField']]}}</option>
+                                    <option value="{{$option->id}}" @if($isEdit && $option->id == $loan[$field['name']] || $option->id == old($field['name']) ){{ 'selected' }}@endif>{{$option[$field['selectOptionNameField']]}}</option>
                                     @endforeach
                                 </select>
                                 @break
                                 @default
-                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" type="{{@$field['type']}}" {{@$field['attributes']}} value="@if($isEdit){{ $loan[$field['name']] }}@else{{ old($field['name']) }}@endif">
+                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" type="{{@$field['type']}}" {{@$field['attributes']}} value="{{ old($field['name'] , @$loan[$field['name']]) }}">
                                 @endswitch
                             </div>
                         </div>
@@ -115,11 +114,11 @@ $isEdit = !empty($loan);
 
             <?php
 
-            $fields = [
+            $guarantorFields = [
                 [
                     'label' => 'Full Name',
                     'name' => 'full_name',
-                    'attributes' => 'required'
+                    // 'attributes' => 'required'
                 ],
                 [
                     'label' => 'Profession',
@@ -128,7 +127,7 @@ $isEdit = !empty($loan);
                 [
                     'label' => 'NIC Number',
                     'name' => 'nic',
-                    'attributes' => 'required'
+                    // 'attributes' => 'required'
                 ],
                 [
                     'label' => 'Email',
@@ -154,22 +153,22 @@ $isEdit = !empty($loan);
                                 <h1 class="font-weight-bold mb-3">Guarantor {{$i + 1}}</h1>
                             </div>
                         </div>
-                        @foreach($fields as $field)
+                        @foreach($guarantorFields as $field)
                         <div class="row m-2">
                             <div class="col-12 col-md-3">
                                 <label class="col-form-label">{{@$field['label']}}</label>
                             </div>
                             <div class="col">
-                                <input class="form-control @error($field['name']) border border-danger @enderror" name="guarantor[{{$i}}][{{$field['name']}}]" {{@$field['attributes']}} @if($isEdit) value="@if($isEdit){{ $customer[$field['name']] }}@else{{ old($field['name']) }}@endif" @endif>
+                                <input class="form-control @error('guarantors.' .$i. '.' .$field['name']) border border-danger @enderror" name="guarantors[{{$i}}][{{$field['name']}}]" {{@$field['attributes']}} value="@if($isEdit){{ $loan[$field['name']] }}@else{{ @old('guarantors')[$i][$field['name']] }}@endif">
                             </div>
                         </div>
                         @endforeach
                     </div>
                 </div>
-                </div>
+        </div>
 
-                @endfor
-        
+        @endfor
+
         </div>
 
         <div class="row mt-3">
@@ -199,6 +198,27 @@ $isEdit = !empty($loan);
     <script>
         $(document).ready(function() {
             $('[mask-money]').maskMoney();
+
+            $('form').on('submit', function(e) {
+                $('[mask-money]').each(function() {
+                    var v = $(this).maskMoney('unmasked')[0];
+                    $(this).val(v);
+                });
+
+            })
+
+            $('[name="amount"], [name="int_rate_mo"], [name="installments"]').keyup(function() {
+                var amount = $('[name="loan_amount"]').maskMoney('unmasked')[0];
+                var int_rate_mo = $('[name="int_rate_mo"]').val();
+                var installments = $('[name="installments"]').val();
+
+                if (amount == '' || int_rate_mo == '' || installments == '')
+                    return;
+
+                var intereset_percentage = parseFloat(int_rate_mo) / 100;
+                var rental = (parseFloat(amount) + (parseFloat(amount) * intereset_percentage)) / parseInt(installments)
+                $('[name="rental"]').val(rental.toFixed(2));
+            });
         });
     </script>
     @endsection
