@@ -40,7 +40,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $isEdit = empty($request->id);
+        $isEdit = !empty($request->id);
 
         $request->validate([
             'full_name' => ['required', 'max:255'],
@@ -48,7 +48,7 @@ class CustomerController extends Controller
             'email' => 'email' . $isEdit ? '' : '|unique:customers'
         ]);
 
-        $customer = $isEdit ? new Customer() : Customer::find($request->id);
+        $customer = $isEdit ? Customer::find($request->id) : new Customer();
 
         $customer->full_name = $request->full_name;
         $customer->email = $request->email;

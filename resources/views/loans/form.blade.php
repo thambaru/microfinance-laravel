@@ -159,7 +159,7 @@ $isEdit = !empty($loan);
                                 <label class="col-form-label">{{@$field['label']}}</label>
                             </div>
                             <div class="col">
-                                <input class="form-control @error('guarantors.' .$i. '.' .$field['name']) border border-danger @enderror" name="guarantors[{{$i}}][{{$field['name']}}]" {{@$field['attributes']}} value="@if($isEdit){{ $loan[$field['name']] }}@else{{ @old('guarantors')[$i][$field['name']] }}@endif">
+                                <input class="form-control @error('guarantors.' .$i. '.' .$field['name']) border border-danger @enderror" name="guarantors[{{$i}}][{{$field['name']}}]" {{@$field['attributes']}} value="@if($isEdit){{ @$loan['guarantors'][$i][$field['name']] }}@else{{ @old('guarantors')[$i][$field['name']] }}@endif">
                             </div>
                         </div>
                         @endforeach

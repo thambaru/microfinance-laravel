@@ -18,7 +18,7 @@ class LoanController extends Controller
         if (empty($request->ajax))
             return view('loans.index');
 
-        $loans = Loan::with('customer')->get();
+        $loans = Loan::with('customer', 'guarantors')->get();
 
         return compact('loans');
     }
@@ -41,7 +41,7 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
-        $isEdit = empty($request->id);
+        $isEdit = !empty($request->id);
 
         $fields = [
             'customer_id' => 'required|numeric',
@@ -51,7 +51,7 @@ class LoanController extends Controller
             'start_date' => 'required',
             'installments' => 'required',
             'rental' => 'required',
-            'proof_doc' => 'required|file',
+            'proof_doc' => 'file' . $isEdit ? '' : '|required',
         ];
 
         $guarantorFields = [
@@ -63,7 +63,7 @@ class LoanController extends Controller
         $request->validate(array_merge($fields, $guarantorFields));
 
 
-        $loan = $isEdit ? new Loan() : Loan::find($request->id);
+        $loan = $isEdit ? Loan::find($request->id) : new Loan();
 
         $loan->customer_id = $request->customer_id;
         $loan->rep_id = $request->rep_id;
@@ -75,10 +75,11 @@ class LoanController extends Controller
 
         $loan->save();
 
-        $fileName = "$loan->id" . time() . '_' . $request->proof_doc->getClientOriginalName();
+        if ($request->hasFile('proof_doc')) {
+            $fileName = "$loan->id" . time() . '_' . $request->proof_doc->getClientOriginalName();
 
-        $request->file('proof_doc')->storeAs('uploads', $fileName, 'public');
-
+            $request->file('proof_doc')->storeAs('uploads', $fileName, 'public');
+        }
 
         if ($isEdit)
             $loan->guarantors()->delete();
@@ -122,6 +123,8 @@ class LoanController extends Controller
      */
     public function edit(Loan $loan)
     {
+        $loan = Loan::with('customer', 'guarantors')->find($loan->id);
+
         return view('loans.form', compact('loan'));
     }
 
