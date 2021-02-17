@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\Customer;
+
 $isEdit = !empty($customer);
 ?>
 
@@ -26,48 +29,7 @@ $isEdit = !empty($customer);
                         <input type="hidden" name="id" value="{{$customer->id}}" />
                         @endif
 
-                        <?php
-
-                        $fields = [
-                            [
-                                'label' => 'Full Name*',
-                                'name' => 'full_name',
-                                'attributes' => 'required'
-                            ],
-                            [
-                                'label' => 'Email',
-                                'name' => 'email',
-                                'type' => 'email'
-                            ],
-                            [
-                                'label' => 'NIC Number*',
-                                'name' => 'nic',
-                                'attributes' => 'required'
-                            ],
-                            [
-                                'label' => 'Address in NIC',
-                                'name' => 'address_nic'
-                            ],
-                            [
-                                'label' => 'Home Address',
-                                'name' => 'address'
-                            ],
-                            [
-                                'label' => 'Business Address',
-                                'name' => 'address_bus'
-                            ],
-                            [
-                                'label' => 'Profession',
-                                'name' => 'profession'
-                            ],
-                            [
-                                'label' => 'Phone Number',
-                                'name' => 'phone_num'
-                            ],
-                        ];
-
-                        ?>
-                        @foreach($fields as $field)
+                        @foreach(Customer::entityFields() as $field)
                         <div class="row mt-2">
                             <div class="col-12 col-md-3">
                                 <label class="col-form-label">{{@$field['label']}}</label>

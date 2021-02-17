@@ -215,8 +215,8 @@ $isEdit = !empty($loan);
                 if (amount == '' || int_rate_mo == '' || installments == '')
                     return;
 
-                var intereset_percentage = parseFloat(int_rate_mo) / 100;
-                var rental = (parseFloat(amount) + (parseFloat(amount) * intereset_percentage)) / parseInt(installments)
+                var interest_percentage = parseFloat(int_rate_mo) / 100;
+                var rental = (parseFloat(amount) + (parseFloat(amount) * interest_percentage)) / parseInt(installments)
                 $('[name="rental"]').val(rental.toFixed(2));
             });
         });
