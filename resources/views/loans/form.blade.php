@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\Loan;
+use App\Models\Guarantor;
 use App\Models\User;
 
 $isEdit = !empty($loan);
@@ -30,61 +32,7 @@ $isEdit = !empty($loan);
                         <input type="hidden" name="id" value="{{$loan->id}}" />
                         @endif
 
-                        <?php
-
-                        $fields = [
-                            [
-                                'label' => 'Customer',
-                                'name' => 'customer_id',
-                                'type' => 'select',
-                                'selectOptions' => Customer::all(),
-                                'selectOptionNameField' => 'full_name',
-                                'attributes' => 'required'
-                            ],
-                            [
-                                'label' => 'Amount',
-                                'name' => 'loan_amount',
-                                'attributes' => 'required mask-money'
-                            ],
-                            [
-                                'label' => 'Interest (%)',
-                                'name' => 'int_rate_mo',
-                                'attributes' => 'required mask-money'
-                            ],
-                            [
-                                'label' => 'Pay in Months',
-                                'name' => 'installments',
-                                'type' => 'number',
-                                'attributes' => 'required min=1'
-                            ],
-                            [
-                                'label' => 'Monthly Rental',
-                                'name' => 'rental',
-                                'attributes' => 'readonly mask-money'
-                            ],
-                            [
-                                'label' => 'Starting Date',
-                                'name' => 'start_date',
-                                'type' => 'date',
-                                'attributes' => 'required'
-                            ],
-                            [
-                                'label' => 'Sales Rep',
-                                'name' => 'rep_id',
-                                'type' => 'select',
-                                'selectOptions' => User::all(),
-                                'selectOptionNameField' => 'full_name',
-                                'attributes' => 'required'
-                            ],
-                            [
-                                'label' => 'Proof document',
-                                'name' => 'proof_doc',
-                                'type' => 'file'
-                            ],
-                        ];
-
-                        ?>
-                        @foreach($fields as $field)
+                        @foreach(Loan::entityFields() as $field)
                         <div class="row mt-2">
                             <div class="col-12 col-md-3">
                                 <label class="col-form-label">{{@$field['label']}}</label>
@@ -100,7 +48,7 @@ $isEdit = !empty($loan);
                                 </select>
                                 @break
                                 @default
-                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" type="{{@$field['type']}}" {{@$field['attributes']}} value="{{ old($field['name'] , @$loan[$field['name']]) }}">
+                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" type="{{@$field['type']}}" {{@$field['attributes']}} @if(!in_array($field['name'], ['proof_doc'])) value="{{ old($field['name'] , @$loan[$field['name']]) }}" @endif>
                                 @endswitch
                             </div>
                         </div>
@@ -111,39 +59,6 @@ $isEdit = !empty($loan);
         </div>
 
         <div class="row mt-3">
-
-            <?php
-
-            $guarantorFields = [
-                [
-                    'label' => 'Full Name',
-                    'name' => 'full_name',
-                    // 'attributes' => 'required'
-                ],
-                [
-                    'label' => 'Profession',
-                    'name' => 'profession'
-                ],
-                [
-                    'label' => 'NIC Number',
-                    'name' => 'nic',
-                    // 'attributes' => 'required'
-                ],
-                [
-                    'label' => 'Email',
-                    'name' => 'email',
-                    'type' => 'email'
-                ],
-                [
-                    'label' => 'Address',
-                    'name' => 'address'
-                ],
-                [
-                    'label' => 'Phone Number',
-                    'name' => 'phone_num'
-                ],
-            ];
-            ?>
             @for($i=0;$i<2;$i++) <div class="col-6">
                 <div class="card">
                     <div class="card-body">
@@ -153,7 +68,7 @@ $isEdit = !empty($loan);
                                 <h1 class="font-weight-bold mb-3">Guarantor {{$i + 1}}</h1>
                             </div>
                         </div>
-                        @foreach($guarantorFields as $field)
+                        @foreach(Guarantor::entityFields() as $field)
                         <div class="row m-2">
                             <div class="col-12 col-md-3">
                                 <label class="col-form-label">{{@$field['label']}}</label>

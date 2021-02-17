@@ -68,7 +68,7 @@
       $('#loan-list tbody').on('click', 'tr', function() {
         var data = table.row(this).data();
 
-        window.location.href = `{{route('loans.index')}}/${data.id}/edit`;
+        window.location.href = `{{route('loans.index')}}/${data.id}`;
       });
     });
   </script>

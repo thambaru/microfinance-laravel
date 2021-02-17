@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guarantor;
 use App\Models\Loan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LoanController extends Controller
@@ -76,9 +77,9 @@ class LoanController extends Controller
         $loan->save();
 
         if ($request->hasFile('proof_doc')) {
-            $fileName = "$loan->id" . time() . '_' . $request->proof_doc->getClientOriginalName();
+            $fileName = Carbon::now()->format("Y-m-d-H:i") . "_$loan->id." . $request->file('proof_doc')->extension();
 
-            $request->file('proof_doc')->storeAs('uploads', $fileName, 'public');
+            $request->file('proof_doc')->storeAs('proof_docs', $fileName, 'public');
         }
 
         if ($isEdit)
@@ -112,7 +113,7 @@ class LoanController extends Controller
      */
     public function show(Loan $loan)
     {
-        //
+        return view('loans.show', compact('loan'));
     }
 
     /**
