@@ -157,11 +157,11 @@ class LoanController extends Controller
     /**
      * Sends the customer object.
      *
-     * @param  \App\Models\Loan  $loan
+     * @param  $loan
      * @return \Illuminate\Http\Response
      */
-    public function getCustomer(Loan $loan)
+    public function getCustomer($loan)
     {
-        return $loan->customer;
+        return Loan::find($loan)->with('customer')->first();
     }
 }

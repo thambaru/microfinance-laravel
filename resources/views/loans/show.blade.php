@@ -15,6 +15,12 @@ use App\Libraries\Common;
             </span>
             <span class="text">Edit</span>
         </a>
+        <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </span>
+            <span class="text">Add Payment</span>
+        </a>
     </x-slot>
 
     <div class="row">

@@ -4,6 +4,7 @@ use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\Guarantor;
 use App\Models\User;
+use Illuminate\Support\Facades\Request;
 
 $isEdit = !empty($payment);
 ?>
@@ -121,11 +122,16 @@ $isEdit = !empty($payment);
                     url: "{{route('loans.index')}}/customer/" + $(this).val(),
                     success: function(data) {
                         $('[data-customer-field]').each(function() {
-                            $(this).html(data[$(this).data('customer-field')]);
+                            $(this).html(data['customer'][$(this).data('customer-field')]);
                         });
+                        $('[name="rep_id"').val(data.rep_id); console.log(data.rep_id)
                     }
                 });
             });
+
+            <?php if (Request::has('loan-id')) { ?>
+                $('[name="loan_id"]').val("{{Request::get('loan-id')}}").trigger('change');
+            <?php } ?>
         });
     </script>
     @endsection
