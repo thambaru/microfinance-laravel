@@ -14,6 +14,11 @@ class Common
         return Str::startsWith(Route::currentRouteName(), $name);
     }
 
+    public static function getInCurrencyFormat($value)
+    {
+        return number_format($value, 2, '.', "");
+    }
+
     public static function getFullLoanAmount($loanId)
     {
         $loan = Loan::find($loanId);
@@ -23,9 +28,9 @@ class Common
 
         $interestPercentage = floatval($loan->int_rate_mo) / 100;
         $amount = floatval($loan->loan_amount);
-        
+
         $fullAmount = $amount + ($amount * $interestPercentage) / $loan->installments;
-        
-        return number_format($fullAmount, 2, '.', "");
+
+        return self::getInCurrencyFormat($fullAmount);
     }
 }

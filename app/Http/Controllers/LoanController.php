@@ -153,4 +153,15 @@ class LoanController extends Controller
 
         return redirect()->route('loans.index')->with('status', "Loan ID #$loan->id was deleted.");
     }
+
+    /**
+     * Sends the customer object.
+     *
+     * @param  \App\Models\Loan  $loan
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustomer(Loan $loan)
+    {
+        return $loan->customer;
+    }
 }

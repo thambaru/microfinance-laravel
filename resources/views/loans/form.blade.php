@@ -41,7 +41,7 @@ $isEdit = !empty($loan);
                                 @switch(@$field['type'])
                                 @case('select')
                                 <select class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} value="{{ old($field['name'] , @$loan[$field['name']]) }}">
-                                    <option>Select {{@$field['label']}}</option>
+                                    <option value="">Select {{@$field['label']}}</option>
                                     @foreach($field['selectOptions'] as $option)
                                     <option value="{{$option->id}}" @if($isEdit && $option->id == $loan[$field['name']] || $option->id == old($field['name']) ){{ 'selected' }}@endif>{{$option[$field['selectOptionNameField']]}}</option>
                                     @endforeach
