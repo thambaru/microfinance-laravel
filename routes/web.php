@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/customer/{loan}', [LoanController::class, 'getCustomer'])->name('loans.customer');
+    Route::get('reports/{type?}', [ReportController::class, 'show'])->name('reports.show');
 });
 
 require __DIR__ . '/auth.php';

@@ -74,6 +74,9 @@ class LoanController extends Controller
         $loan->start_date = $request->start_date;
         $loan->rental = $request->rental;
 
+        if (!$isEdit)
+            $loan->total_due = $request->loan_amount;
+
         $loan->save();
 
         if ($request->hasFile('proof_doc')) {
