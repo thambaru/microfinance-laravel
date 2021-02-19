@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\Loan;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -10,19 +10,21 @@ class ReportController extends Controller
     public function show(Request $request, $type = "excess")
     {
         if (empty($request->ajax))
-            return view("reports.show", ['reportType' => $type]);
+            return view("reports.index", ['reportType' => $type]);
 
-        $customers = Customer::whereHas('loans', function ($q) use ($type) {
-            switch ($type) {
-                case ('arrears'):
-                    $q->whereRaw('total_due_todate > total_paid');
-                    break;
-                case ('excess'):
-                default:
-                    $q->whereRaw('total_due_todate < total_paid');
-            }
-        })->get();
+        $loans = Loan::with('customer');
 
-        return compact('customers');
+        switch ($type) {
+            case ('arrears'):
+                $loans->whereRaw('total_due_todate > total_paid');
+                break;
+            case ('excess'):
+            default:
+                $loans->whereRaw('total_due_todate < total_paid');
+        }
+
+        $loans = $loans->get();
+
+        return compact('loans');
     }
 }

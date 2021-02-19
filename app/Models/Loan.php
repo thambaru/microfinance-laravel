@@ -12,6 +12,8 @@ class Loan extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $appends = ['last_payment'];
+
     public static function entityFields()
     {
         return [
@@ -76,6 +78,12 @@ class Loan extends Model
         return File::glob($this->proofDocumentsPath() . "*_" . $this->id . ".*");
     }
 
+    public function getLastPaymentAttribute()
+    {
+        $lastPayment = $this->payments()->orderBy('id', 'desc')->first();
+        return empty($lastPayment) ? ['created_at' => 'Never'] : $lastPayment;
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -84,5 +92,10 @@ class Loan extends Model
     public function guarantors()
     {
         return $this->hasMany(Guarantor::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }
