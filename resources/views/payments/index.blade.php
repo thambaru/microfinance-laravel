@@ -1,3 +1,8 @@
+<?php
+
+use App\Models\User;
+?>
+
 <x-app-layout>
 
   <x-slot name="title">
@@ -18,6 +23,28 @@
 
   <div class="card">
     <div class="card-body">
+
+      <form id="payment-filter-form" action="">
+        @csrf
+        <div class="row mb-3">
+          <div class="col-3">
+            <select class="form-control" name="rep_id">
+              <option value="">Filter by rep</option>
+              @foreach(User::whereRoleIs('rep')->get() as $rep)
+              <option value="{{$rep->id}}" @if(Request::get('rep_id') == $rep->id) selected @endif>{{$rep->name}}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="col">
+            <label for="from">From</label>
+            <input type="text" id="from" name="from" value="{{ Request::get('from') }}" autocomplete="off">
+            <label for="to">to</label>
+            <input type="text" id="to" name="to" value="{{ Request::get('to') }}" autocomplete="off">
+          </div>
+        </div>
+      </form>
+
       <table id="payment-list" class="display">
         <thead>
           <tr>
@@ -34,12 +61,18 @@
     </div>
   </div>
 
+  @section('styles')
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  @endsection
+
   @section('scripts')
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   <script>
     $(document).ready(function() {
       var table = $('#payment-list').DataTable({
         ajax: {
-          url: '{{route("payments.index",["ajax"=>true])}}',
+          url: "{!! url()->current().'?'.http_build_query(array_merge(request()->all(),['ajax'=>true])) !!}",
           dataSrc: 'payments'
         },
         columns: [{
@@ -66,6 +99,39 @@
 
         window.location.href = `{{route('payments.index')}}/${data.id}`;
       });
+
+      var dateFormat = "yy-mm-dd",
+        datePickerOptions = {
+          numberOfMonths: 2,
+          dateFormat
+        },
+        from = $("#from")
+        .datepicker(datePickerOptions)
+        .on("change", function() {
+          to.datepicker("option", "minDate", getDate(this));
+        }),
+        to = $("#to")
+        .datepicker(datePickerOptions)
+        .on("change", function() {
+          from.datepicker("option", "maxDate", getDate(this));
+        });
+
+      function getDate(element) {
+        var date;
+        try {
+          date = $.datepicker.parseDate(dateFormat, element.value);
+        } catch (error) {
+          date = null;
+        }
+
+        return date;
+      }
+
+      $('#from, #to').change(function() {
+        if ($('#from').val() == "" || $('#to').val() == "") return;
+
+        $('#payment-filter-form').submit();
+      })
     });
   </script>
   @endsection

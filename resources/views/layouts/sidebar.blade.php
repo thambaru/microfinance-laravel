@@ -62,18 +62,6 @@ use App\Libraries\Common;
             </div>
         </div>
     </li>
-    <li class="nav-item @if(Common::isRoute('payments')) active @endif">
-        <a class="nav-link @if(!Common::isRoute('payments')) collapsed @endif" href="#" data-toggle="collapse" data-target="#collapsePayments" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-file-invoice-dollar"></i>
-            <span>Payments</span>
-        </a>
-        <div id="collapsePayments" class="collapse @if(Common::isRoute('payments')) show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{route('payments.index')}}">List All</a>
-                <a class="collapse-item" href="{{route('payments.create')}}">Create</a>
-            </div>
-        </div>
-    </li>
     <li class="nav-item @if(Common::isRoute('reports')) active @endif">
         <a class="nav-link @if(!Common::isRoute('reports')) collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseReports" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-file-invoice-dollar"></i>

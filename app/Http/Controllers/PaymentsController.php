@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PaymentsController extends Controller
@@ -17,7 +18,17 @@ class PaymentsController extends Controller
         if (empty($request->ajax))
             return view('payments.index');
 
-        $payments = Payment::with('rep', 'loan')->get();
+        $payments = Payment::with('rep', 'loan');
+
+        if ($request->has('from') && $request->has('to'))
+            $payments = $payments->whereBetween('created_at', ["$request->from 00:00:00", "$request->to 23:59:59"]);
+
+        if ($request->has('rep_id'))
+            $payments = $payments->whereHas('rep', function ($q) use ($request) {
+                $q->where('id', $request->rep_id);
+            });
+
+        $payments = $payments->get();
 
         return compact('payments');
     }

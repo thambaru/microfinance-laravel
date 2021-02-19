@@ -20,6 +20,7 @@
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
     <link href="{{asset('lib/jquery-datatables/jquery.dataTables.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/main.css')}}" rel="stylesheet">
+    @yield('styles')
 </head>
 
 <body id="page-top">
@@ -56,8 +57,6 @@
 
             </div>
             <!-- End of Main Content -->
-
-            @include('layouts.footer')
 
         </div>
         <!-- End of Content Wrapper -->
