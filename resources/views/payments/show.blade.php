@@ -8,14 +8,8 @@ use App\Libraries\Common;
 <x-app-layout>
 
     <x-slot name="title">
-        Payment #{{$payment->id}}
-        <a href="{{route('payments.edit', $payment->id)}}" class="btn btn-success btn-icon-split">
-            <span class="icon text-white-50">
-                <i class="fas fa-edit"></i>
-            </span>
-            <span class="text">Edit</span>
-        </a>
-        <a href="{{route('payments.edit', $payment->id)}}" class="btn btn-primary btn-icon-split">
+        Payment Receipt
+        <a href="{{route('payments.index', $payment->id)}}" class="btn btn-primary btn-icon-split">
             <span class="icon text-white-50">
                 <i class="fas fa-print"></i>
             </span>

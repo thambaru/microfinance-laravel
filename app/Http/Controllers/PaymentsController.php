@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommissTransaction;
 use App\Models\Payment;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PaymentsController extends Controller
@@ -66,6 +66,19 @@ class PaymentsController extends Controller
         $payment->rep_id = $request->rep_id;
 
         $payment->save();
+
+        // Create Rep Commission
+        $commissTransaction = new CommissTransaction();
+
+        $repPercentage=floatval($payment->rep->commiss_perc) / 100;
+        $repCommission = $request->amount * $repPercentage;
+
+        $commissTransaction->rep_id = $request->rep_id;
+        $commissTransaction->amount =  $repCommission;
+        $commissTransaction->balance = $payment->rep->commis_bal - $repCommission;
+        $commissTransaction->type =  0;
+
+        $commissTransaction->save();
 
         return redirect()->back()->with('status', $payment);
     }
