@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 class Common
 {
 
+    public static $userRoles = [
+        'admin' => 1,
+        'rep' => 2
+    ];
+
     public static function isRoute($name)
     {
         return Str::startsWith(Route::currentRouteName(), $name);

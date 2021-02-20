@@ -62,9 +62,21 @@ use App\Libraries\Common;
             </div>
         </div>
     </li>
+    <li class="nav-item @if(Common::isRoute('users')) active @endif">
+        <a class="nav-link @if(!Common::isRoute('users')) collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Sales Reps</span>
+        </a>
+        <div id="collapseUsers" class="collapse @if(Common::isRoute('users')) show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{route('users.index')}}">List All</a>
+                <a class="collapse-item" href="{{route('users.create')}}">Create</a>
+            </div>
+        </div>
+    </li>
     <li class="nav-item @if(Common::isRoute('reports')) active @endif">
         <a class="nav-link @if(!Common::isRoute('reports')) collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseReports" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-file-invoice-dollar"></i>
+            <i class="fas fa-fw fa-scroll"></i>
             <span>Reports</span>
         </a>
         <div id="collapseReports" class="collapse @if(Common::isRoute('reports')) show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">

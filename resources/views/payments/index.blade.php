@@ -31,16 +31,18 @@ use App\Models\User;
             <select class="form-control" name="rep_id">
               <option value="">Filter by rep</option>
               @foreach(User::whereRoleIs('rep')->get() as $rep)
-              <option value="{{$rep->id}}" @if(Request::get('rep_id') == $rep->id) selected @endif>{{$rep->name}}</option>
+              <option value="{{$rep->id}}" @if(Request::get('rep_id')==$rep->id) selected @endif>{{$rep->name}}</option>
               @endforeach
             </select>
           </div>
 
           <div class="col">
-            <label for="from">From</label>
-            <input type="text" id="from" name="from" value="{{ Request::get('from') }}" autocomplete="off">
-            <label for="to">to</label>
-            <input type="text" id="to" name="to" value="{{ Request::get('to') }}" autocomplete="off">
+            <div class="form-check form-check-inline">
+              <label class="mx-2" for="from">From</label>
+              <input class="form-control" id="from" name="from" value="{{ Request::get('from') }}" autocomplete="off">
+              <label class="mx-2" for="to">to</label>
+              <input class="form-control" id="to" name="to" value="{{ Request::get('to') }}" autocomplete="off">
+            </div>
           </div>
         </div>
       </form>
@@ -126,6 +128,10 @@ use App\Models\User;
 
         return date;
       }
+
+      $('[name="rep_id"]').change(function() {
+        $('#payment-filter-form').submit();
+      });
 
       $('#from, #to').change(function() {
         if ($('#from').val() == "" || $('#to').val() == "") return;

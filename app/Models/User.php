@@ -42,4 +42,54 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function entityFields()
+    {
+        return [
+            [
+                'label' => 'Full Name',
+                'name' => 'full_name',
+                'attributes' => 'required'
+            ],
+            [
+                'label' => 'Name',
+                'name' => 'name',
+                'attributes' => 'required'
+            ],
+            [
+                'label' => 'Email',
+                'name' => 'email',
+                'type' => 'email'
+            ],
+            [
+                'label' => 'Password (min: 8)',
+                'name' => 'password',
+                'type' => 'password',
+                'formOnly' => true
+            ],
+            [
+                'label' => 'Confirm Password',
+                'name' => 'password_confirmation',
+                'type' => 'password',
+                'formOnly' => true
+            ],
+            [
+                'label' => 'NIC Number',
+                'name' => 'nic',
+                'attributes' => 'required'
+            ],
+            [
+                'label' => 'Home Address',
+                'name' => 'address'
+            ],
+            [
+                'label' => 'Phone Number',
+                'name' => 'phone_num'
+            ],
+            [
+                'label' => 'Commission Percentage (%)',
+                'name' => 'commiss_perc'
+            ],
+        ];
+    }
 }
