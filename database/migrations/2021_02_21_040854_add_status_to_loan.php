@@ -15,6 +15,7 @@ class AddStatusToLoan extends Migration
     {
         Schema::table('loans', function (Blueprint $table) {
             $table->boolean('is_active')->default(true)->after('total_paid');
+            $table->boolean('is_an_overdue_loan')->default(false)->after('is_active');
         });
     }
 
@@ -27,6 +28,7 @@ class AddStatusToLoan extends Migration
     {
         Schema::table('loans', function (Blueprint $table) {
             $table->dropColumn('is_active');
+            $table->dropColumn('is_an_overdue_loan');
         });
     }
 }

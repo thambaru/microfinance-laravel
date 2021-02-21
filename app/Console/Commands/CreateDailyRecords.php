@@ -42,7 +42,9 @@ class CreateDailyRecords extends Command
     {
         $today = Carbon::now()->format('Y-m-d 00:00:00');
 
-        $loans = Loan::where('is_active', 1)->get();
+        $loans = Loan::where('is_active', 1)
+            ->where('is_an_overdue_loan', 0)
+            ->get();
 
         foreach ($loans as $loan) {
             $dailyInstallment = $loan->payments
@@ -85,6 +87,37 @@ class CreateDailyRecords extends Command
             $dailyRecord->excess_tot = $excessTotal;
 
             $dailyRecord->save();
+
+            /* 
+                Close the loan on 65th day
+            */
+            $date = Carbon::parse($loan->start_date);
+            $now = Carbon::now();
+            $diffDates = $date->diffInDays($now);
+
+            if ($diffDates >= 65) {
+                $loan->is_active = 0;
+                $loan->save();
+
+                /* 
+                    If an unpaid one, Create a new loan without the installment facility
+                */
+                if ($arrearsTotal > 0) {
+                    $newLoan = new Loan();
+
+                    $newLoan->rep_id = $loan->rep_id;
+                    $newLoan->customer_id = $loan->customer_id;
+                    $newLoan->loan_amount = $arrearsTotal;
+                    $newLoan->int_rate_mo = 0;
+                    $newLoan->start_date = $now->format('Y-m-d');
+                    $newLoan->installments = 0;
+                    $newLoan->rental = $arrearsTotal;
+                    $newLoan->total_due_todate = $arrearsTotal;
+                    $newLoan->is_an_overdue_loan = 1;
+
+                    $newLoan->save();
+                }
+            }
         }
 
         $this->info("Completed {$loans->count()} daily records.");
