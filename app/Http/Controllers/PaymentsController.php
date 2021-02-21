@@ -70,7 +70,7 @@ class PaymentsController extends Controller
         // Create Rep Commission
         $commissTransaction = new CommissTransaction();
 
-        $repPercentage=floatval($payment->rep->commiss_perc) / 100;
+        $repPercentage = floatval($payment->rep->commiss_perc) / 100;
         $repCommission = $request->amount * $repPercentage;
 
         $commissTransaction->rep_id = $request->rep_id;

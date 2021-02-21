@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Libraries\Common;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -84,6 +86,26 @@ class Loan extends Model
         return empty($lastPayment) ? ['created_at' => 'Never'] : $lastPayment;
     }
 
+    public function getLastDailyRecordAttribute()
+    {
+        return $this->dailyRecords()->orderBy('id', 'desc')->first();
+    }
+
+    public function getDailyRentalAttribute()
+    {
+        $interestPercentage = floatval($this->int_rate_mo) / 100;
+        $loanAmount = floatval($this->loan_amount);
+        $loanInterest = $loanAmount * $interestPercentage;
+        $loanWithInterest = $loanAmount + $loanInterest;
+
+        $date = Carbon::parse($this->start_date)->addMonths($this->installments);
+        $now = Carbon::now();
+
+        $diff = $date->diffInDays($now);
+
+        return Common::getInCurrencyFormat($loanWithInterest / $diff);
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -97,5 +119,10 @@ class Loan extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function dailyRecords()
+    {
+        return $this->hasMany(DailyRecord::class);
     }
 }

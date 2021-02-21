@@ -21,7 +21,7 @@ class Common
 
     public static function getInCurrencyFormat($value)
     {
-        return number_format($value, 2, '.', "");
+        return (float) number_format($value, 2, '.', "");
     }
 
     public static function getFullLoanAmount($loanId)
