@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\LoanController;
 use App\Models\DailyRecord;
 use App\Models\Loan;
 use Carbon\Carbon;
@@ -96,8 +97,7 @@ class CreateDailyRecords extends Command
             $diffDates = $date->diffInDays($now);
 
             if ($diffDates >= 65) {
-                $loan->is_active = 0;
-                $loan->save();
+                LoanController::closeLoan($loan);
 
                 /* 
                     If an unpaid one, Create a new loan without the installment facility

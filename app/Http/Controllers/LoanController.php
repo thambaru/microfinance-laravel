@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommissTransaction;
 use App\Models\Guarantor;
 use App\Models\Loan;
 use Carbon\Carbon;
@@ -166,5 +167,32 @@ class LoanController extends Controller
     public function getCustomer($loan)
     {
         return Loan::find($loan)->with('customer')->first();
+    }
+
+    /**
+     * Closes the loan by setting is_active = 0
+     * and Set payable commission to the rep.
+     *
+     * @param  $loan
+     * @return \Illuminate\Http\Response
+     */
+    public static function closeLoan(Loan $loan)
+    {
+        $loan->is_active = 0;
+        $loan->save();
+
+        $paidAmount = $loan->payments()->sum('amount');
+
+        $commissTransaction = new CommissTransaction();
+
+        $repPercentage = $loan->loan_amount * $loan->rep->commiss_perc / 100;
+        $repCommission = $paidAmount * $repPercentage;
+
+        $commissTransaction->rep_id = $loan->rep_id;
+        $commissTransaction->amount =  $repCommission;
+        $commissTransaction->balance = $loan->rep->commis_bal - $repCommission;
+        $commissTransaction->type =  0;
+
+        $commissTransaction->save();
     }
 }
