@@ -1,1 +1,1 @@
-<img src="{{asset('img/cheetah-logo.jpg')}}" width="300px" />
+<img id="logo" src="{{asset('img/cheetah-logo.jpg')}}" {{ $attributes }} />

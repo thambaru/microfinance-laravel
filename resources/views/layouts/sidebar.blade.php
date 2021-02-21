@@ -9,7 +9,9 @@ use App\Libraries\Common;
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3"><img src="{{asset('img/cheetah-logo.jpg')}}"></div>
+        <div class="sidebar-brand-text mx-3">
+            <x-application-logo class="fill-current text-gray-500 rounded-md" width="200" />
+        </div>
     </a>
 
     <!-- Divider -->
