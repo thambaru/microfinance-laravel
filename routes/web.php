@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\CommissTransactionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
+use App\Models\CommissTransaction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +35,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/customer/{loan}', [LoanController::class, 'getCustomer'])->name('loans.customer');
+    
+    Route::resource('commissions', CommissTransactionController::class)->except(['edit', 'destroy']);
+    Route::get('commissions/rep/{id}', [CommissTransactionController::class, 'getRep'])->name('commissions.rep');
+
     Route::get('reports/{type?}', [ReportController::class, 'show'])->name('reports.show');
 });
 

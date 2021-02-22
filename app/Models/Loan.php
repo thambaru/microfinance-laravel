@@ -58,7 +58,7 @@ class Loan extends Model
                 'label' => 'Sales Rep',
                 'name' => 'rep_id',
                 'type' => 'select',
-                'selectOptions' => User::all(),
+                'selectOptions' => User::whereRoleIs('rep')->get(),
                 'selectOptionNameField' => 'full_name',
                 'attributes' => 'required'
             ],

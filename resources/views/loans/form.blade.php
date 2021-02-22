@@ -65,7 +65,7 @@ $isEdit = !empty($loan);
 
                         <div class="row mt-2">
                             <div class="col-12 col-md-3">
-                                <h1 class="font-weight-bold mb-3">Guarantor {{$i + 1}}</h1>
+                                <h5 class="mb-3">Guarantor {{$i + 1}}</h5>
                             </div>
                         </div>
                         @foreach(Guarantor::entityFields() as $field)
@@ -86,15 +86,17 @@ $isEdit = !empty($loan);
 
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-3 mb-5">
 
             <div class="col text-center">
                 <button type="submit" class="btn btn-block btn-primary">Submit</button>
             </div>
             @if($isEdit)
+            @role('admin')
             <div class="col-1 text-center">
                 <a href="#" class="btn btn-danger" onclick="triggerDeleteForm(event, 'loan-delete-form')"><i class="fa fa-trash"></i> Delete</a>
             </div>
+            @endrole
             @endif
         </div>
 

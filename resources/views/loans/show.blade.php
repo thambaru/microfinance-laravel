@@ -4,6 +4,9 @@ use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\Guarantor;
 use App\Libraries\Common;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 ?>
 <x-app-layout>
 
@@ -21,6 +24,20 @@ use App\Libraries\Common;
             </span>
             <span class="text">Add Payment</span>
         </a>
+        @role('admin')
+        <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-warning btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-window-close"></i>
+            </span>
+            <span class="text">Close</span>
+        </a>
+        <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-danger btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-trash"></i>
+            </span>
+            <span class="text">Delete</span>
+        </a>
+        @endrole    
     </x-slot>
 
     <div class="row">
@@ -37,7 +54,7 @@ use App\Libraries\Common;
                         <div class="col mt-2">
                             @switch($field['name'])
                             @case('proof_doc')
-                            
+
                             <ul>
                                 @foreach($loan[$field['name']] as $file)
 
@@ -83,9 +100,10 @@ use App\Libraries\Common;
 
                     <div class="row mt-2">
                         <div class="col-12 col-md-3">
-                            <h1 class="font-weight-bold mb-3">Guarantor {{$i + 1}}</h1>
+                            <h5>Guarantor {{$i + 1}}</h5>
                         </div>
                     </div>
+                    <hr />
                     @foreach(Guarantor::entityFields() as $field)
                     <div class="row">
                         <div class="col-12 col-md-3">

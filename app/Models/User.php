@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Scopes\UserScope;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -42,6 +44,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new UserScope);
+    }
 
     public static function entityFields()
     {
@@ -91,5 +104,20 @@ class User extends Authenticatable
                 'name' => 'commiss_perc'
             ],
         ];
+    }
+
+    public function getMonthlyEarningsAttribute()
+    {
+        return $this->commissTransactions()
+            ->whereBetween('created_at', [
+                Carbon::now()->firstOfMonth()->format('Y-m-d 00:00:00'),
+                Carbon::now()->endOfMonth()->format('Y-m-d 23:59:59')
+            ])
+            ->sum('amount');
+    }
+
+    public function commissTransactions()
+    {
+        return $this->hasMany(CommissTransaction::class, 'rep_id');
     }
 }

@@ -113,7 +113,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        $user->is_active = 0;
+        $user->save();
 
         return redirect()->route('users.index')->with('status', "$user->full_name was deleted.");
     }

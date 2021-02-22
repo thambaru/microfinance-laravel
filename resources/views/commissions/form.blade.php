@@ -1,27 +1,23 @@
 <?php
 
-use App\Models\Customer;
-use App\Models\Payment;
-use App\Models\Guarantor;
+use App\Models\CommissTransaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Request;
-
-$isEdit = !empty($payment);
 ?>
 
 
 <x-app-layout>
     <x-slot name="title">
-        @if(!$isEdit)Create a @else Edit @endif Payment
+        Pay Commission
     </x-slot>
 
     @if (session('status'))
     <div class="alert alert-success">
-        Payment has been @if(!$isEdit) created. @else edited. @endif <u><a href="{{route('payments.show', session('status')->id)}}">View</a></u>
+        Commission has been paid. <u><a href="{{route('commissions.show', session('status')->id)}}">View</a></u>
     </div>
     @endif
 
-    <form action="{{route('payments.store')}}" method="POST" enctype="multipart/form-data">
+    <form action="{{route('commissions.store')}}" method="POST" enctype="multipart/form-data">
         <div class="row">
             <div class="col">
                 <div class="card">
@@ -29,11 +25,7 @@ $isEdit = !empty($payment);
 
                         @csrf
 
-                        @if($isEdit)
-                        <input type="hidden" name="id" value="{{$payment->id}}" />
-                        @endif
-
-                        @foreach(Payment::entityFields() as $field)
+                        @foreach(CommissTransaction::entityFields() as $field)
                         <div class="row mt-2">
                             @if(@$field['type'] != "hidden")
                             <div class="col-12 col-md-3">
@@ -43,15 +35,15 @@ $isEdit = !empty($payment);
                             <div class="col">
                                 @switch(@$field['type'])
                                 @case('select')
-                                <select class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} value="{{ old($field['name'] , @$payment[$field['name']]) }}">
+                                <select class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" {{@$field['attributes']}} value="{{ old($field['name'] , @$commission[$field['name']]) }}">
                                     <option value="">Select {{@$field['label']}}</option>
                                     @foreach($field['selectOptions'] as $option)
-                                    <option value="{{$option->id}}" @if($isEdit && $option->id == $payment[$field['name']] || $option->id == old($field['name']) ){{ 'selected' }}@endif>{{$option[$field['selectOptionNameField']]}}</option>
+                                    <option value="{{$option->id}}" @if($option->id == old($field['name']) ){{ 'selected' }}@endif>{{$option[$field['selectOptionNameField']]}}</option>
                                     @endforeach
                                 </select>
                                 @break
                                 @default
-                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" type="{{@$field['type']}}" {{@$field['attributes']}} @if(!in_array($field['name'], ['proof_doc'])) value="{{ old($field['name'] , @$payment[$field['name']]) }}" @endif>
+                                <input class="form-control @error($field['name']) border border-danger @enderror" name="{{$field['name']}}" type="{{@$field['type']}}" {{@$field['attributes']}} @if(!in_array($field['name'], ['proof_doc'])) value="{{ old($field['name'] , @$commission[$field['name']]) }}" @endif>
                                 @endswitch
                             </div>
                         </div>
@@ -61,11 +53,6 @@ $isEdit = !empty($payment);
                             <div class="col text-center">
                                 <button type="submit" class="btn btn-block btn-primary">Submit</button>
                             </div>
-                            @if($isEdit)
-                            <div class="col-2">
-                                <a href="#" class="btn btn-danger" onclick="triggerDeleteForm(event, 'payment-delete-form')"><i class="fa fa-trash"></i> Delete</a>
-                            </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -73,15 +60,16 @@ $isEdit = !empty($payment);
             <div class="col-8">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Customer details</h5>
+                        <h5 class="card-title">User details</h5>
                         <hr class="mb-2" />
-                        @foreach(Customer::entityFields() as $field)
+                        @foreach(User::entityFields() as $field)
+                        @if(@$field['formOnly']) @continue @endif
                         <div class="row">
                             <div class="col-12 col-md-3">
                                 <label class="col-form-label font-weight-bold">{{ $field['label'] }}</label>
                             </div>
-                            <div class="col mt-2" data-customer-field="{{ $field['name'] }}">
-                                : [Select Loan No. to display]
+                            <div class="col mt-2" data-user-field="{{ $field['name'] }}">
+                                : [Select Rep to display]
                             </div>
                         </div>
                         @endforeach
@@ -91,16 +79,9 @@ $isEdit = !empty($payment);
         </div>
     </form>
 
-    @if($isEdit)
-    <form id="payment-delete-form" action="{{ route('payments.destroy', $payment->id) }}" method="POST" class="d-none">
-        @method('DELETE')
-        @csrf
-    </form>
-    @endif
-
     @section('scripts')
     <script src="{{asset('lib/jquery-maskmoney/jquery.maskMoney.min.js')}}"></script>
-
+    
     <script>
         $(document).ready(function() {
             $('[mask-money]').maskMoney();
@@ -113,24 +94,24 @@ $isEdit = !empty($payment);
 
             });
 
-            $('[name="loan_id"]').change(function() {
-                $('[data-customer-field]').each(function() {
+            $('[name="rep_id"]').change(function() {
+                $('[data-user-field]').each(function() {
                     $(this).html('Loading...');
                 });
 
                 $.ajax({
-                    url: "{{route('loans.index')}}/customer/" + $(this).val(),
+                    url: "{{route('commissions.index')}}/rep/" + $(this).val(),
                     success: function(data) {
-                        $('[data-customer-field]').each(function() {
-                            $(this).html(data['customer'][$(this).data('customer-field')]);
+                        $('[data-user-field]').each(function() {
+                            $(this).html(data[$(this).data('user-field')]);
                         });
-                        $('[name="rep_id"').val(data.rep_id);
+                        $('[name="rep_id"').val(data.id);
                     }
                 });
             });
 
-            <?php if (Request::has('loan-id')) { ?>
-                $('[name="loan_id"]').val("{{Request::get('loan-id')}}").trigger('change');
+            <?php if (Request::has('rep-id')) { ?>
+                $('[name="rep_id"]').val("{{Request::get('rep-id')}}").trigger('change');
             <?php } ?>
         });
     </script>

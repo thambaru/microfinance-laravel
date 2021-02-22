@@ -13,6 +13,11 @@ class Common
         'admin' => 1,
         'rep' => 2
     ];
+    
+    public static $CommissTransactionTypes = [
+        'onLoanClose' => 0,
+        'commissionPayment' => 1
+    ];
 
     public static function isRoute($name)
     {
