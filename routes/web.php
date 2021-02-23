@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\CommissTransactionController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
-use App\Models\CommissTransaction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,9 +25,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentsController::class)->except(['edit', 'destroy']);
@@ -35,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/customer/{loan}', [LoanController::class, 'getCustomer'])->name('loans.customer');
-    
+
     Route::resource('commissions', CommissTransactionController::class)->except(['edit', 'destroy']);
     Route::get('commissions/rep/{id}', [CommissTransactionController::class, 'getRep'])->name('commissions.rep');
 

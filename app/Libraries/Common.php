@@ -29,18 +29,4 @@ class Common
         return (float) number_format($value, 2, '.', "");
     }
 
-    public static function getFullLoanAmount($loanId)
-    {
-        $loan = Loan::find($loanId);
-
-        if (empty($loan))
-            return "Inavlid Loan ID";
-
-        $interestPercentage = floatval($loan->int_rate_mo) / 100;
-        $amount = floatval($loan->loan_amount);
-
-        $fullAmount = $amount + ($amount * $interestPercentage) / $loan->installments;
-
-        return self::getInCurrencyFormat($fullAmount);
-    }
 }

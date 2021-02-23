@@ -20,9 +20,10 @@ use App\Libraries\Common;
     <div class="row">
         <div class="col">
             <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bold text-primary">Payment details</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Payment details</h5>
-                    <hr class="mb-2" />
                     @foreach(Payment::entityFields() as $field)
                     <div class="row">
                         <div class="col-12 col-md-5">
@@ -44,9 +45,10 @@ use App\Libraries\Common;
         </div>
         <div class="col-8">
             <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bold text-primary">Customer details</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Customer details</h5>
-                    <hr class="mb-2" />
                     @foreach(Customer::entityFields() as $field)
                     <div class="row">
                         <div class="col-12 col-md-3">

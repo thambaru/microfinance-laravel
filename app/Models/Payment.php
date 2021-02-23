@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Libraries\Common;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +11,10 @@ class Payment extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $casts = [
+        'amount' => 'float',
+    ];
 
     public static function entityFields()
     {
@@ -53,10 +56,5 @@ class Payment extends Model
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format("Y-m-d H:i:s");
-    }
-
-    public function getAmountAttribute($value)
-    {
-        return Common::getInCurrencyFormat($value);
     }
 }

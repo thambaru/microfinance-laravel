@@ -45,9 +45,10 @@ use App\Libraries\Common;
     <div class="row">
         <div class="col-8">
             <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bold text-primary">Rep details</h6>
+                </div>
                 <div class="card-body">
-                <h5 class="card-title">Rep details</h5>
-                <hr/>
                     @foreach(User::entityFields() as $field)
                     @if(@$field['formOnly'] == true) @continue @endif
                     <div class="row mt-2">

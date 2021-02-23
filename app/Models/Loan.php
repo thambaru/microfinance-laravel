@@ -20,6 +20,7 @@ class Loan extends Model
         'loan_amount' => 'float',
         'int_rate_mo' => 'float',
         'is_active' => 'boolean',
+        'is_an_overdue_loan' => 'boolean',
     ];
 
     public static function entityFields()
@@ -104,16 +105,21 @@ class Loan extends Model
         return $loanInterest = $this->loan_amount * $interestPercentage;
     }
 
-    public function getDailyRentalAttribute()
+    public function getFullLoanAmountAttribute()
     {
         $loanWithInterest = $this->loan_amount + $this->amount_interest;
 
+        return Common::getInCurrencyFormat($loanWithInterest);
+    }
+
+    public function getDailyRentalAttribute()
+    {
         $date = Carbon::parse($this->start_date)->addMonths($this->installments);
         $now = Carbon::now();
 
         $diff = $date->diffInDays($now);
 
-        return Common::getInCurrencyFormat($loanWithInterest / $diff);
+        return Common::getInCurrencyFormat($this->full_loan_amount / $diff);
     }
 
     public function customer()

@@ -41,15 +41,16 @@ use Illuminate\Support\Facades\Auth;
             </span>
             <span class="text">Delete</span>
         </a>
-        @endrole    
+        @endrole
     </x-slot>
 
     <div class="row">
         <div class="col">
             <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bold text-primary">Loan details</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Loan details</h5>
-                    <hr class="mb-2" />
                     @foreach(Loan::entityFields() as $field)
                     <div class="row">
                         <div class="col-12 col-md-5">
@@ -80,9 +81,10 @@ use Illuminate\Support\Facades\Auth;
         </div>
         <div class="col-8">
             <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bold text-primary">Customer details</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Customer details</h5>
-                    <hr class="mb-2" />
                     @foreach(Customer::entityFields() as $field)
                     <div class="row">
                         <div class="col-12 col-md-3">
@@ -100,14 +102,10 @@ use Illuminate\Support\Facades\Auth;
     <div class="row">
         @for($i=0; $i < 2; $i++) <div class="col-6">
             <div class="card my-2">
+                <div class="card-header">
+                    <h6 class="font-weight-bold text-primary">Guarantor {{$i + 1}}</h6>
+                </div>
                 <div class="card-body">
-
-                    <div class="row mt-2">
-                        <div class="col-12 col-md-3">
-                            <h5>Guarantor {{$i + 1}}</h5>
-                        </div>
-                    </div>
-                    <hr />
                     @foreach(Guarantor::entityFields() as $field)
                     <div class="row">
                         <div class="col-12 col-md-3">
