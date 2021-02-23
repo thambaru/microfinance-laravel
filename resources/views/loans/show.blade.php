@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 <x-app-layout>
 
     <x-slot name="title">
-        Loan #{{$loan->id}}
+        Loan #{{$loan->id}} @if(!$loan->is_active) [Closed] @endif
         <a href="{{route('loans.edit', $loan->id)}}" class="btn btn-success btn-icon-split">
             <span class="icon text-white-50">
                 <i class="fas fa-edit"></i>
@@ -25,12 +25,16 @@ use Illuminate\Support\Facades\Auth;
             <span class="text">Add Payment</span>
         </a>
         @role('admin')
+
+        @if($loan->is_active)
         <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-warning btn-icon-split">
             <span class="icon text-white-50">
                 <i class="fas fa-window-close"></i>
             </span>
             <span class="text">Close</span>
         </a>
+        @endif
+
         <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-danger btn-icon-split">
             <span class="icon text-white-50">
                 <i class="fas fa-trash"></i>

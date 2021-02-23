@@ -49,7 +49,7 @@ class CreateDailyRecords extends Command
 
         foreach ($loans as $loan) {
             $dailyInstallment = $loan->payments
-                // ->whereBetween('created_at', [$today, Carbon::now()->format('Y-m-d 23:59:59')])
+                ->whereBetween('created_at', [$today, Carbon::now()->format('Y-m-d 23:59:59')])
                 ->sum('amount');
 
             if (empty($loan->last_daily_record)) {
@@ -62,17 +62,24 @@ class CreateDailyRecords extends Command
 
             /*
                 Difference between today's paid installment vs Daily Rental.
-                Excess: if the answer is +.
-                Arrears: if the answer is -.
+                Excess: if the answer is -.
+                Arrears: if the answer is +.
             */
             $paymentDiff = $loan->daily_rental - $dailyInstallment;
 
             $arrearsTotal = 0;
             $excessTotal = 0;
-            if ($paymentDiff > 0)
+
+            if ($paymentDiff > 0) {
                 $arrearsTotal = $paymentDiff;
-            else
+
+                // Add a daily interest
+                $interestPercentage = $loan->int_rate_mo / 100;
+                $loan->loan_amount += $loan->loan_amount * $interestPercentage / 30;
+                $loan->save();
+            } else {
                 $excessTotal = abs($paymentDiff);
+            }
 
             /*
                 Create Record using above calculation

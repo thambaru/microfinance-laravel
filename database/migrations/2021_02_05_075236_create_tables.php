@@ -25,15 +25,15 @@ class CreateTables extends Migration
             $table->string('profession')->nullable();
             $table->timestamps();
         });
-        
+
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained();
-            $table->double('loan_amount');
+            $table->double('loan_amount', 8, 2);
             $table->double('int_rate_mo', 4, 2);
             $table->date('start_date');
-            $table->integer('installments');
-            $table->double('rental');
+            $table->integer('installments', 8, 2);
+            $table->double('rental', 8, 2);
             $table->timestamps();
         });
 
@@ -53,20 +53,20 @@ class CreateTables extends Migration
             $table->id();
             $table->date('date');
             $table->foreignId('loan_id')->constrained();
-            $table->double('accrued_am');
-            $table->double('paid_am');
-            $table->double('accumulat_am');
-            $table->double('arrears_tot');
-            $table->double('excess_tot');
+            $table->double('accrued_am', 8, 2);
+            $table->double('paid_am', 8, 2);
+            $table->double('accumulat_am', 8, 2);
+            $table->double('arrears_tot', 8, 2);
+            $table->double('excess_tot', 8, 2);
             $table->timestamps();
         });
 
         Schema::create('commiss_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rep_id')->constrained('users');
-            $table->double('amount');
+            $table->double('amount', 8, 2);
             $table->tinyInteger('type');
-            $table->double('balance');
+            $table->double('balance', 8, 2);
             $table->timestamps();
         });
     }

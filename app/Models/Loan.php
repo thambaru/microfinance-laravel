@@ -16,6 +16,12 @@ class Loan extends Model
 
     protected $appends = ['last_payment'];
 
+    protected $casts = [
+        'loan_amount' => 'float',
+        'int_rate_mo' => 'float',
+        'is_active' => 'boolean',
+    ];
+
     public static function entityFields()
     {
         return [
@@ -91,12 +97,16 @@ class Loan extends Model
         return $this->dailyRecords()->orderBy('id', 'desc')->first();
     }
 
+    public function getAmountInterestAttribute()
+    {
+        $interestPercentage = $this->int_rate_mo / 100;
+
+        return $loanInterest = $this->loan_amount * $interestPercentage;
+    }
+
     public function getDailyRentalAttribute()
     {
-        $interestPercentage = floatval($this->int_rate_mo) / 100;
-        $loanAmount = floatval($this->loan_amount);
-        $loanInterest = $loanAmount * $interestPercentage;
-        $loanWithInterest = $loanAmount + $loanInterest;
+        $loanWithInterest = $this->loan_amount + $this->amount_interest;
 
         $date = Carbon::parse($this->start_date)->addMonths($this->installments);
         $now = Carbon::now();
