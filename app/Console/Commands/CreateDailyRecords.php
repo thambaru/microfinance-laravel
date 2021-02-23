@@ -75,7 +75,7 @@ class CreateDailyRecords extends Command
 
                 // Add a daily interest
                 $interestPercentage = $loan->int_rate_mo / 100;
-                $loan->loan_amount += $loan->loan_amount * $interestPercentage / 30;
+                $loan->loan_amount += $arrearsTotal * $interestPercentage / 30;
                 $loan->save();
             } else {
                 $excessTotal = abs($paymentDiff);
