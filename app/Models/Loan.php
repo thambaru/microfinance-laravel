@@ -21,6 +21,8 @@ class Loan extends Model
         'int_rate_mo' => 'float',
         'is_active' => 'boolean',
         'is_an_overdue_loan' => 'boolean',
+        'installments' => 'integer',
+        'start_date' => 'date',
     ];
 
     public static function entityFields()
@@ -114,7 +116,7 @@ class Loan extends Model
 
     public function getDailyRentalAttribute()
     {
-        $date = Carbon::parse($this->start_date)->addMonths($this->installments);
+        $date = $this->start_date->addMonths($this->installments);
         $now = Carbon::now();
 
         $diff = $date->diffInDays($now);
@@ -139,6 +141,15 @@ class Loan extends Model
         }
 
         return $data;
+    }
+
+
+    public function getRemainingMonthsAttribute()
+    {
+
+        $now = Carbon::now();
+
+        return $this->installments - $this->start_date->diffInMonths($now);
     }
 
     public function customer()

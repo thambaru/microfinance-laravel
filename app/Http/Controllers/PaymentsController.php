@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Loan;
 use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use \PDF;
 
 class PaymentsController extends Controller
 {
@@ -114,5 +117,34 @@ class PaymentsController extends Controller
         $payment->delete();
 
         return redirect()->route('payments.index')->with('status', "Payment ID #$payment->id was deleted.");
+    }
+
+    /**
+     * Return payment receipt in PDF
+     *
+     * @param  \App\Models\Payment  $payment
+     * @return \Illuminate\Http\Response
+     */
+    public function receipt(Payment $payment)
+    {
+        $loanStart = $payment->loan->start_date->format('Y-m-d 00:00:00');
+        $endOfToday = Carbon::now()->format('Y-m-d 23:59:59');
+
+        $totalPaid = Loan::find($payment->loan->id)
+            ->payments
+            ->sum('amount');
+
+        $paidToday = Loan::find($payment->loan->id)
+            ->payments
+            ->whereBetween('created_at', [$loanStart, $endOfToday])
+            ->sum('amount');
+
+        $now = Carbon::now();
+        $dayDiff = $payment->loan->start_date->diffInDays($now);
+
+        $arrears = $dayDiff * $payment->loan->daily_rental;
+
+        $pdf = PDF::loadView('payments.invoice', compact('payment', 'totalPaid', 'paidToday', 'arrears'));
+        return $pdf->download("invoice-{$payment->id}-{$payment->created_at}.pdf");
     }
 }

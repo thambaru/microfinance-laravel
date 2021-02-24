@@ -28,8 +28,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('customers', CustomerController::class);
-    Route::resource('payments', PaymentsController::class)->except(['edit', 'destroy']);
     Route::resource('users', UserController::class);
+
+    Route::resource('payments', PaymentsController::class)->except(['edit', 'destroy']);
+    Route::resource('payments.invoice', PaymentsController::class)->except(['edit', 'destroy']);
+    Route::get('download-receipt/{payment}', [PaymentsController::class, 'receipt'])->name('payments.receipt');
+    
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/customer/{loan}', [LoanController::class, 'getCustomer'])->name('loans.customer');
