@@ -122,6 +122,25 @@ class Loan extends Model
         return Common::getInCurrencyFormat($this->full_loan_amount / $diff);
     }
 
+    public static function lastNMonths($months = 12)
+    {
+        $data = [];
+
+        for ($i = $months - 1; $i >= 0; $i--) {
+
+            $data[] = [
+                'i' => $i,
+                'month' => Carbon::now()->subMonths($i)->format('M'),
+                'sum' => Loan::whereBetween('created_at', [
+                    Carbon::now()->subMonths($i)->startOfMonth()->format("Y-m-d 00:00:00"),
+                    Carbon::now()->subMonths($i)->endOfMonth()->format("Y-m-d 00:00:00"),
+                ])->sum('loan_amount')
+            ];
+        }
+
+        return $data;
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

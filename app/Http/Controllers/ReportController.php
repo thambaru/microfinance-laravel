@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -26,5 +29,13 @@ class ReportController extends Controller
         $loans = $loans->get();
 
         return compact('loans');
+    }
+
+    public function getOverallPaymentsVSLoans()
+    {;
+        return [
+            'payments' => Payment::lastNMonths(),
+            'loans' => Loan::lastNMonths(),
+        ];
     }
 }

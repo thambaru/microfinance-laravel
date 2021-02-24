@@ -9,3 +9,7 @@
     color: #335aca;
     cursor: pointer;
 }
+
+.highcharts-credits{
+    display: none;
+}
