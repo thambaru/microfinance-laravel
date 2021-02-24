@@ -24,6 +24,11 @@ class DashboardController extends Controller
         if ($user->hasRole('rep'))
             return $this->repIndex($request);
 
+        $overallPaymentsVSLoans = [
+            'payments' => Payment::lastNMonths(),
+            'loans' => Loan::lastNMonths(),
+        ];
+
         $monthPaymentTotal = Payment::with('rep')
             ->whereBetween('created_at', [
                 Carbon::now()->startOfMonth()->format('Y-m-d 00:00:00'),
@@ -59,6 +64,7 @@ class DashboardController extends Controller
             ->get();
 
         return view('dashboard', compact(
+            'overallPaymentsVSLoans',
             'monthPaymentTotal',
             'dailyPayments',
             'overallPayments',

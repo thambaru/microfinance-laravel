@@ -30,12 +30,4 @@ class ReportController extends Controller
 
         return compact('loans');
     }
-
-    public function getOverallPaymentsVSLoans()
-    {;
-        return [
-            'payments' => Payment::lastNMonths(),
-            'loans' => Loan::lastNMonths(),
-        ];
-    }
 }

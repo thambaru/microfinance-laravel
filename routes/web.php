@@ -38,7 +38,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('commissions/rep/{id}', [CommissTransactionController::class, 'getRep'])->name('commissions.rep');
 
     Route::get('reports/{type?}', [ReportController::class, 'show'])->name('reports.show');
-    Route::get('reports/get/overall-payments', [ReportController::class, 'getOverallPaymentsVSLoans'])->name('reports.getOverallPaymentsVSLoans');
 });
 
 require __DIR__ . '/auth.php';
