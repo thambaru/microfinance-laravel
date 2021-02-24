@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Carbon;
+use App\Libraries\Common;
 ?>
 <x-app-layout>
 
@@ -13,6 +14,73 @@ use Illuminate\Support\Carbon;
     {{session('status')}}
   </div>
   @endif
+  <div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Monthly Earnings</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">Rs. {{$monthPaymentTotal}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Monthly Total Loan Value</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">Rs. {{Common::getInCurrencyFormat($monthlyTotalLoanValue)}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total Active Loans</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{$totalActiveLoans}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total Active Customers</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{$totalActiveCustomers}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-user fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="row">
     <div class="col">
@@ -53,7 +121,7 @@ use Illuminate\Support\Carbon;
     </div>
   </div>
 
-  <div class="row  my-5">
+  <div class="row my-3">
     <div class="col">
       <div class="card">
         <div class="card-header">

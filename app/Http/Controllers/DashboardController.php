@@ -29,17 +29,23 @@ class DashboardController extends Controller
             'loans' => Loan::lastNMonths(),
         ];
 
+        $startOfTheMonth = Carbon::now()->startOfMonth()->format('Y-m-d 00:00:00');
+        $endOfTheMonth = Carbon::now()->endOfMonth()->format('Y-m-d 23:59:59');
+
+        $startOfTheDay = Carbon::now()->format('Y-m-d 00:00:00');
+        $endOfTheDay = Carbon::now()->format('Y-m-d 23:59:59');
+
         $monthPaymentTotal = Payment::with('rep')
             ->whereBetween('created_at', [
-                Carbon::now()->startOfMonth()->format('Y-m-d 00:00:00'),
-                Carbon::now()->endOfMonth()->format('Y-m-d 23:59:59')
+                $startOfTheMonth,
+                $endOfTheMonth
             ])
             ->sum('amount');
 
         $dailyPayments = Payment::with('loan.customer')
             ->whereBetween('created_at', [
-                Carbon::now()->format('Y-m-d 00:00:00'),
-                Carbon::now()->format('Y-m-d 23:59:59')
+                $startOfTheDay,
+                $endOfTheDay
             ])
             ->get();
 
@@ -47,11 +53,29 @@ class DashboardController extends Controller
             ->doesntHave('payments')
             ->get();
 
+        $monthlyTotalLoanValue = Loan::whereBetween('created_at', [
+            $startOfTheMonth,
+            $endOfTheMonth
+        ])
+            ->sum('loan_amount');
+
+        $totalActiveLoans = Loan::where('is_active', 1)->count();
+
+        $totalActiveCustomers = Payment::whereBetween('created_at', [
+                $startOfTheMonth,
+                $endOfTheMonth
+            ])
+            ->groupBy('loan_id')
+            ->count();
+
         return view('dashboard', compact(
             'overallPaymentsVSLoans',
             'monthPaymentTotal',
             'dailyPayments',
-            'unpaidCustomers'
+            'unpaidCustomers',
+            'monthlyTotalLoanValue',
+            'totalActiveLoans',
+            'totalActiveCustomers'
         ));
     }
 
