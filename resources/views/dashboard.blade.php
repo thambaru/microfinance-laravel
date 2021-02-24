@@ -14,12 +14,55 @@ use Illuminate\Support\Carbon;
   </div>
   @endif
 
-  <div class="card">
-    <div class="card-header">
-      <h6 class="font-weight-bold text-primary">Overall Performance</h6>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="font-weight-bold text-primary">Payments received today</h6>
+        </div>
+        <div class="card-body">
+          @if($dailyPayments->count() == 0)
+          Nothing
+          @else
+          <ul>
+            @foreach($dailyPayments as $payment)
+            <li>{{$payment->loan->customer->full_name}} - Rs.{{$payment->amount}}</li>
+            @endforeach
+          </ul>
+          @endif
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <div id="overall-payments-vs-loans"></div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="font-weight-bold text-primary">Payments to be received today</h6>
+        </div>
+        <div class="card-body">
+          @if($unpaidCustomers->count() == 0)
+          Nothing
+          @else
+          <ul>
+            @foreach($unpaidCustomers as $loan)
+            <li>{{$loan->customer->full_name}} - Rs.{{$loan->daily_rental}}</li>
+            @endforeach
+          </ul>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row  my-5">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="font-weight-bold text-primary">Overall Performance</h6>
+        </div>
+        <div class="card-body">
+          <div id="overall-payments-vs-loans"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -62,26 +105,26 @@ use Illuminate\Support\Carbon;
         series: seriesData[1]
       });
 
-    function chartData(data) {
-      var monthArray = [];
-      var paymentData = [];
-      var loanData = [];
+      function chartData(data) {
+        var monthArray = [];
+        var paymentData = [];
+        var loanData = [];
 
-      $.map(data.loans, function(val) {
-        loanData.push(val.sum);
-      });
+        $.map(data.loans, function(val) {
+          loanData.push(val.sum);
+        });
 
-      $.map(data.payments, function(val) {
-        monthArray.push(val.month);
-        paymentData.push(val.sum);
-      });
+        $.map(data.payments, function(val) {
+          monthArray.push(val.month);
+          paymentData.push(val.sum);
+        });
 
-      return {
-        months: monthArray,
-        payments: paymentData,
-        loans: loanData
-      };
-    }
+        return {
+          months: monthArray,
+          payments: paymentData,
+          loans: loanData
+        };
+      }
     });
   </script>
   @endsection

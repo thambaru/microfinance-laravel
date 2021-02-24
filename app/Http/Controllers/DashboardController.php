@@ -36,30 +36,14 @@ class DashboardController extends Controller
             ])
             ->sum('amount');
 
-        $dailyPayments = Payment::with('customer')
+        $dailyPayments = Payment::with('loan.customer')
             ->whereBetween('created_at', [
                 Carbon::now()->format('Y-m-d 00:00:00'),
                 Carbon::now()->format('Y-m-d 23:59:59')
             ])
             ->get();
 
-        $overallPayments = Payment::select(
-            DB::raw('sum(amount) as sums'),
-            DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
-        )
-            ->groupBy('months')
-            ->get();
-
-        $monthTopLoans = Loan::with('rep')
-            ->whereBetween('created_at', [
-                Carbon::now()->startOfMonth()->format('Y-m-d 00:00:00'),
-                Carbon::now()->endOfMonth()->format('Y-m-d 23:59:59')
-            ])->get();
-
-        $unpaidCustomers = Loan::with('customer')->whereBetween('created_at', [
-            Carbon::now()->format('Y-m-d 00:00:00'),
-            Carbon::now()->format('Y-m-d 23:59:59')
-        ])
+        $unpaidCustomers = Loan::with('customer')->where('is_active', 1)
             ->doesntHave('payments')
             ->get();
 
@@ -67,8 +51,6 @@ class DashboardController extends Controller
             'overallPaymentsVSLoans',
             'monthPaymentTotal',
             'dailyPayments',
-            'overallPayments',
-            'monthTopLoans',
             'unpaidCustomers'
         ));
     }
