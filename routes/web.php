@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('customers', CustomerController::class);
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->middleware('role:admin');
 
     Route::resource('payments', PaymentsController::class)->except(['edit', 'destroy']);
     Route::resource('payments.invoice', PaymentsController::class)->except(['edit', 'destroy']);

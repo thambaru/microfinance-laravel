@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use App\Models\Payment;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use \PDF;
 
 class PaymentsController extends Controller
@@ -20,17 +22,19 @@ class PaymentsController extends Controller
         if (empty($request->ajax))
             return view('payments.index');
 
+        $user = User::find(Auth::id());
+
         $payments = Payment::with('rep', 'loan');
 
         if ($request->has('from') && $request->has('to'))
             $payments = $payments->whereBetween('created_at', ["$request->from 00:00:00", "$request->to 23:59:59"]);
 
-        if ($request->has('rep_id'))
+        if (!$user->hasRole('rep') && $request->has('rep_id'))
             $payments = $payments->whereHas('rep', function ($q) use ($request) {
                 $q->where('id', $request->rep_id);
             });
 
-        $payments = $payments->get();
+        $payments = $user->hasRole('rep') ? $payments->where('rep_id', $user->id)->get() : $payments->get();
 
         return compact('payments');
     }
@@ -127,6 +131,10 @@ class PaymentsController extends Controller
      */
     public function receipt(Payment $payment)
     {
+        $user = User::find(Auth::id());
+        if ($user->hasRole('rep') && $payment->rep_id != $user->id)
+            return abort(403);
+
         $loanStart = $payment->loan->start_date->format('Y-m-d 00:00:00');
         $endOfToday = Carbon::now()->format('Y-m-d 23:59:59');
 

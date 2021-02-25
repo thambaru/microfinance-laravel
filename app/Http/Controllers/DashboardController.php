@@ -13,16 +13,13 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     /**
-     * Display dashboard reports for Admin
+     * Display dashboard reports
      * 
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         $user = User::find(Auth::id());
-
-        if ($user->hasRole('rep'))
-            return $this->repIndex($request);
 
         $overallPaymentsVSLoans = [
             'payments' => Payment::lastNMonths(),
@@ -35,38 +32,48 @@ class DashboardController extends Controller
         $startOfTheDay = Carbon::now()->format('Y-m-d 00:00:00');
         $endOfTheDay = Carbon::now()->format('Y-m-d 23:59:59');
 
-        $monthPaymentTotal = Payment::with('rep')
-            ->whereBetween('created_at', [
+        $monthPaymentTotal = Payment::whereBetween('created_at', [
                 $startOfTheMonth,
                 $endOfTheMonth
-            ])
-            ->sum('amount');
+            ]);
 
         $dailyPayments = Payment::with('loan.customer')
             ->whereBetween('created_at', [
                 $startOfTheDay,
                 $endOfTheDay
-            ])
-            ->get();
+            ]);
 
         $unpaidCustomers = Loan::with('customer')->where('is_active', 1)
-            ->doesntHave('payments')
-            ->get();
+            ->doesntHave('payments');
 
         $monthlyTotalLoanValue = Loan::whereBetween('created_at', [
             $startOfTheMonth,
             $endOfTheMonth
-        ])
-            ->sum('loan_amount');
+        ]);
 
-        $totalActiveLoans = Loan::where('is_active', 1)->count();
+        $totalActiveLoans = Loan::where('is_active', 1);
 
         $totalActiveCustomers = Payment::whereBetween('created_at', [
-                $startOfTheMonth,
-                $endOfTheMonth
-            ])
-            ->groupBy('loan_id')
-            ->count();
+            $startOfTheMonth,
+            $endOfTheMonth
+        ])
+            ->groupBy('loan_id');
+
+        if ($user->hasRole('rep')) {
+            $monthPaymentTotal = $monthPaymentTotal->where('rep_id', $user->id)->sum('amount');
+            $dailyPayments = $dailyPayments->where('rep_id', $user->id)->get();
+            $unpaidCustomers = $unpaidCustomers->where('rep_id', $user->id)->get();
+            $monthlyTotalLoanValue = $monthlyTotalLoanValue->where('rep_id', $user->id)->sum('loan_amount');
+            $totalActiveLoans = $totalActiveLoans->where('rep_id', $user->id)->count();
+            $totalActiveCustomers = $totalActiveCustomers->where('rep_id', $user->id)->count();
+        }else{
+            $monthPaymentTotal = $monthPaymentTotal->sum('amount');
+            $dailyPayments = $dailyPayments->get();
+            $unpaidCustomers = $unpaidCustomers->get();
+            $monthlyTotalLoanValue = $monthlyTotalLoanValue->sum('loan_amount');
+            $totalActiveLoans = $totalActiveLoans->count();
+            $totalActiveCustomers = $totalActiveCustomers->count();
+        }
 
         return view('dashboard', compact(
             'overallPaymentsVSLoans',
@@ -77,14 +84,5 @@ class DashboardController extends Controller
             'totalActiveLoans',
             'totalActiveCustomers'
         ));
-    }
-
-    /**
-     * Display dashboard reports for Rep
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function repIndex(Request $request)
-    {
     }
 }

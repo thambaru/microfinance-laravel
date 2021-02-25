@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\CommissTransaction;
 use App\Models\Guarantor;
 use App\Models\Loan;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoanController extends Controller
 {
@@ -20,7 +22,11 @@ class LoanController extends Controller
         if (empty($request->ajax))
             return view('loans.index');
 
-        $loans = Loan::with('customer', 'guarantors')->get();
+        $user = User::find(Auth::id());
+
+        $loans = Loan::with('customer', 'guarantors');
+
+        $loans = $user->hasRole('rep') ? $loans->where('rep_id', $user->id)->get() : $loans->get();
 
         return compact('loans');
     }

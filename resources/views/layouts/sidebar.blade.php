@@ -67,7 +67,8 @@ use App\Libraries\Common;
             </div>
         </div>
     </li>
-    
+
+    @role('admin')
     <hr class="sidebar-divider">
 
     <li class="nav-item @if(Common::isRoute('users')) active @endif">
@@ -94,7 +95,8 @@ use App\Libraries\Common;
             </div>
         </div>
     </li>
-
+    @endrole
+    
     <hr class="sidebar-divider">
 
     <li class="nav-item @if(Common::isRoute('reports')) active @endif">

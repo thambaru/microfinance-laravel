@@ -116,6 +116,21 @@ class User extends Authenticatable
             ->sum('amount');
     }
 
+    public function getCustomersAttribute()
+    {
+        $customerIds = [];
+
+        foreach ($this->loans as $loan)
+            $customerIds[] = $loan->customer_id;
+
+        return Customer::find($customerIds);
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, 'rep_id');
+    }
+
     public function commissTransactions()
     {
         return $this->hasMany(CommissTransaction::class, 'rep_id');

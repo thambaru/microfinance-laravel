@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -17,7 +19,9 @@ class CustomerController extends Controller
         if (empty($request->ajax))
             return view('customers.index');
 
-        $customers = Customer::all();
+        $user = User::find(Auth::id());
+
+        $customers = $user->hasRole('rep') ? $user->customers : Customer::all();
 
         return compact('customers');
     }
