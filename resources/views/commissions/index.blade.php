@@ -52,7 +52,7 @@ use App\Models\User;
           <tr>
             <th>#</th>
             <th>Rep Name</th>
-            <th>Amount (Rs.)</th>
+            <th>Amount</th>
           </tr>
         </thead>
         <tbody>
@@ -83,7 +83,9 @@ use App\Models\User;
             data: 'rep.name'
           },
           {
-            data: 'amount'
+            data: 'amount',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
           },
         ]
       });

@@ -52,10 +52,14 @@
             data: 'email'
           },
           {
-            data: 'commiss_perc'
+            data: 'commiss_perc',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2 )
           },
           {
-            data: 'commiss_bal'
+            data: 'commiss_bal',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
           }
         ]
       });

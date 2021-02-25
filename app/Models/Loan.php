@@ -47,21 +47,20 @@ class Loan extends Model
                 'attributes' => 'required mask-money'
             ],
             [
-                'label' => 'Pay in Months',
+                'label' => 'Pay in Days',
                 'name' => 'installments',
                 'type' => 'number',
                 'attributes' => 'required min=1'
             ],
             [
-                'label' => 'Monthly Rental',
+                'label' => 'Daily Rental',
                 'name' => 'rental',
                 'attributes' => 'readonly mask-money'
             ],
             [
                 'label' => 'Starting Date',
                 'name' => 'start_date',
-                'type' => 'date',
-                'attributes' => 'required'
+                'attributes' => 'required date-field'
             ],
             [
                 'label' => 'Sales Rep',
@@ -116,7 +115,7 @@ class Loan extends Model
 
     public function getDailyRentalAttribute()
     {
-        $date = $this->start_date->addMonths($this->installments);
+        $date = $this->start_date->addDays($this->installments);
         $now = Carbon::now();
 
         $diff = $date->diffInDays($now);

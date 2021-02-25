@@ -4,6 +4,7 @@ use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\Guarantor;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 $isEdit = !empty($loan);
 ?>
@@ -109,11 +110,24 @@ $isEdit = !empty($loan);
     </form>
     @endif
 
+    @section('styles')
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @endsection
+
     @section('scripts')
     <script src="{{asset('lib/jquery-maskmoney/jquery.maskMoney.min.js')}}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script>
         $(document).ready(function() {
+            $("[date-field]").datepicker();
+            <?php if (!$isEdit) { ?>
+                $("[name='start_date']").datepicker("setDate", new Date());
+            <?php }
+            $user = User::find(Auth::id());
+            if (!$isEdit && $user->hasRole('rep')) { ?>
+                $('[name="rep_id"]').val(<?php echo $user->id ?>);
+            <?php } ?>
             $('[mask-money]').maskMoney();
 
             $('form').on('submit', function(e) {
@@ -124,7 +138,10 @@ $isEdit = !empty($loan);
 
             })
 
-            $('[name="amount"], [name="int_rate_mo"], [name="installments"]').keyup(function() {
+            $('[name="loan_amount"], [name="int_rate_mo"], [name="installments"]').keyup(calculateRental);
+            $('[name="loan_amount"], [name="int_rate_mo"], [name="installments"]').focusout(calculateRental);
+
+            function calculateRental() {
                 var amount = $('[name="loan_amount"]').maskMoney('unmasked')[0];
                 var int_rate_mo = $('[name="int_rate_mo"]').val();
                 var installments = $('[name="installments"]').val();
@@ -135,7 +152,7 @@ $isEdit = !empty($loan);
                 var interest_percentage = parseFloat(int_rate_mo) / 100;
                 var rental = (parseFloat(amount) + (parseFloat(amount) * interest_percentage)) / parseInt(installments)
                 $('[name="rental"]').val(rental.toFixed(2));
-            });
+            }
         });
     </script>
     @endsection

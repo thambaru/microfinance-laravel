@@ -36,6 +36,8 @@
   </div>
 
   @section('scripts')
+  <script src="{{asset('lib/moment/moment.min.js')}}"></script>
+
   <script>
     $(document).ready(function() {
       var table = $('#loan-list').DataTable({
@@ -50,16 +52,23 @@
             data: 'customer.full_name'
           },
           {
-            data: 'loan_amount'
+            data: 'loan_amount',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
           },
           {
             data: 'installments'
           },
           {
-            data: 'rental'
+            data: 'rental',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
           },
           {
-            data: 'start_date'
+            data: 'start_date',
+            render: function(data){
+              return moment(data).format('YYYY-MM-DD');
+            }
           },
         ]
       });

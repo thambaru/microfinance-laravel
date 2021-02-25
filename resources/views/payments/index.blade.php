@@ -51,9 +51,9 @@ use App\Models\User;
         <thead>
           <tr>
             <th>#</th>
-            <th>Amount (Rs.)</th>
+            <th>Amount</th>
             <th>Paid On</th>
-            <th>Loan Rental (Rs.)</th>
+            <th>Loan Rental</th>
             <th>Rep Name</th>
           </tr>
         </thead>
@@ -81,13 +81,17 @@ use App\Models\User;
             data: 'id'
           },
           {
-            data: 'amount'
+            data: 'amount',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
           },
           {
             data: 'created_at'
           },
           {
-            data: 'loan.rental'
+            data: 'loan.rental',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
           },
           {
             data: 'rep.name'

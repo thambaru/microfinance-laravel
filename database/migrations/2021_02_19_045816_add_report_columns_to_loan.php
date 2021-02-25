@@ -15,7 +15,7 @@ class AddReportColumnsToLoan extends Migration
     {
         Schema::table('loans', function (Blueprint $table) {
             $table->double('total_due_todate')->default(0)->after('rental');
-            $table->double('total_paid')->default(0)->after('total_due');
+            $table->double('total_paid')->default(0)->after('total_due_todate');
         });
     }
 

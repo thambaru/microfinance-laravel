@@ -18,7 +18,7 @@ use App\Libraries\Common;
     <p>Rental: Rs. {{$payment->loan->daily_rental}}</p>
     <p>Remaining: {{$payment->loan->remaining_months}}/{{$payment->loan->installments}}</p>
     <p>Start Date: {{$payment->loan->start_date->format('Y-m-d')}}</p>
-    <p>End Date: {{$payment->loan->start_date->addMonths($payment->loan->installments)->format('Y-m-d')}}</p>
+    <p>End Date: {{$payment->loan->start_date->addDays($payment->loan->installments)->format('Y-m-d')}}</p>
     <center> <p>----------------------------------</p> </center>
     <p>Total Paid: Rs. {{Common::getInCurrencyFormat($payment->amount)}}</p>
     <p>Total Due: Rs. {{$payment->loan->loan_amount - $totalPaid}}</p>

@@ -82,7 +82,7 @@ class LoanController extends Controller
         $loan->rental = $request->rental;
 
         if (!$isEdit)
-            $loan->total_due = $request->loan_amount;
+            $loan->total_due_todate = $request->loan_amount;
 
         $loan->save();
 
