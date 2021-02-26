@@ -126,7 +126,7 @@ $isEdit = !empty($loan);
             <?php }
             $user = User::find(Auth::id());
             if (!$isEdit && $user->hasRole('rep')) { ?>
-                $('[name="rep_id"]').val(<?php echo $user->id ?>);
+                $('[name="rep_id"]').val(<?php echo $user->id ?>).closest('.row').hide();
             <?php } ?>
             $('[mask-money]').maskMoney();
 

@@ -14,7 +14,7 @@ class Loan extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $appends = ['last_payment'];
+    protected $appends = ['last_payment', 'outstanding_amount', 'daily_rental', 'status_text'];
 
     protected $casts = [
         'loan_amount' => 'float',
@@ -145,13 +145,22 @@ class Loan extends Model
         return $data;
     }
 
-
-    public function getRemainingMonthsAttribute()
+    public function getRemainingDaysAttribute()
     {
-
         $now = Carbon::now();
 
-        return $this->installments - $this->start_date->diffInMonths($now);
+        return $this->installments - $this->start_date->diffInDays($now);
+    }
+
+    public function getOutstandingAmountAttribute()
+    {
+        $paidAmount = $this->payments->sum('amount');
+        return $this->loan_amount - $paidAmount;
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return $this->is_active ? 'Ongoing' : 'Closed';
     }
 
     public function customer()

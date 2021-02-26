@@ -63,9 +63,12 @@ class LoanController extends Controller
         ];
 
         $guarantorFields = [
-            // 'guarantors.*.full_name' => 'required',
+            'guarantors.*.full_name' => 'required',
+            'guarantors.*.profession' => 'required',
             'guarantors.*.nic' => 'required_with:guarantors.*.full_name',
             'guarantors.*.email' => 'email' . $isEdit ? '' : '|unique:guaranters',
+            'guarantors.*.address' => 'required',
+            'guarantors.*.phone_num' => 'required',
         ];
 
         $request->validate(array_merge($fields, $guarantorFields));
@@ -123,6 +126,11 @@ class LoanController extends Controller
      */
     public function show(Loan $loan)
     {
+        $user = User::find(Auth::id());
+
+        if (!$user->hasRole('rep') && $loan->rep_id != $user->id)
+            return abort(403);
+
         return view('loans.show', compact('loan'));
     }
 

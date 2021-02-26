@@ -10,3 +10,10 @@ function triggerDeleteForm(event, formId) {
     if (confirm("Are you sure want to delete?"))
         document.getElementById(formId).submit();
 }
+
+$('[confirm-dialog]').click(function (event) {
+    event.preventDefault();
+
+    if (confirm("Are you sure want to proceed?"))
+        window.location.href = $(this).attr('href');
+})

@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/customer/{loan}', [LoanController::class, 'getCustomer'])->name('loans.customer');
+    Route::get('loans/customer/{loan}', [LoanController::class, 'getCustomer'])->name('loans.customer');
 
     Route::resource('commissions', CommissTransactionController::class)->except(['edit', 'destroy']);
     Route::get('commissions/rep/{id}', [CommissTransactionController::class, 'getRep'])->name('commissions.rep');

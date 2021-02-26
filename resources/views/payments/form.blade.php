@@ -125,6 +125,7 @@ $isEdit = !empty($payment);
                             $(this).html(data['customer'][$(this).data('customer-field')]);
                         });
                         $('[name="rep_id"').val(data.rep_id);
+                        $('[name="amount"').val(data.daily_rental);
                     }
                 });
             });

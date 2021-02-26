@@ -26,16 +26,7 @@ use Illuminate\Support\Facades\Auth;
         </a>
         @role('admin')
 
-        @if($loan->is_active)
-        <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-warning btn-icon-split">
-            <span class="icon text-white-50">
-                <i class="fas fa-window-close"></i>
-            </span>
-            <span class="text">Close</span>
-        </a>
-        @endif
-
-        <a href="{{route('payments.create', ['loan-id' => $loan->id])}}" class="btn btn-danger btn-icon-split">
+        <a href="#" class="btn btn-danger btn-icon-split" onclick="triggerDeleteForm(event, 'loan-delete-form')">
             <span class="icon text-white-50">
                 <i class="fas fa-trash"></i>
             </span>
@@ -122,4 +113,11 @@ use Illuminate\Support\Facades\Auth;
 
     @endfor
     </div>
+
+    @role('admin')
+    <form id="loan-delete-form" action="{{ route('loans.destroy', $loan->id) }}" method="POST" class="d-none">
+        @method('DELETE')
+        @csrf
+    </form>
+    @endif
 </x-app-layout>

@@ -23,10 +23,12 @@
           <tr>
             <th>#</th>
             <th>Customer Name</th>
-            <th>Amount</th>
+            <th>Loan Amount</th>
             <th>Installments</th>
             <th>Rental</th>
+            <th>Outstanding Amount</th>
             <th>Starting Date</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -54,21 +56,30 @@
           {
             data: 'loan_amount',
             className: 'dt-body-right',
-            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
+            render: $.fn.dataTable.render.number(',', '.', 2, 'Rs. ')
           },
           {
-            data: 'installments'
+            data: 'installments',
+            className: 'dt-body-right',
           },
           {
             data: 'rental',
             className: 'dt-body-right',
-            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
+            render: $.fn.dataTable.render.number(',', '.', 2, 'Rs. ')
+          },
+          {
+            data: 'outstanding_amount',
+            className: 'dt-body-right',
+            render: $.fn.dataTable.render.number(',', '.', 2, 'Rs. ')
           },
           {
             data: 'start_date',
-            render: function(data){
+            render: function(data) {
               return moment(data).format('YYYY-MM-DD');
             }
+          },
+          {
+            data: 'status_text'
           },
         ]
       });

@@ -16,7 +16,7 @@ use App\Libraries\Common;
     <p>Loan No: #{{$payment->loan->id}}</p>
     <p>Loan Amount: {{$payment->loan->loan_amount}}</p>
     <p>Rental: Rs. {{$payment->loan->daily_rental}}</p>
-    <p>Remaining: {{$payment->loan->remaining_months}}/{{$payment->loan->installments}}</p>
+    <p>Remaining: {{$payment->loan->remaining_days}}/{{$payment->loan->installments}}</p>
     <p>Start Date: {{$payment->loan->start_date->format('Y-m-d')}}</p>
     <p>End Date: {{$payment->loan->start_date->addDays($payment->loan->installments)->format('Y-m-d')}}</p>
     <center> <p>----------------------------------</p> </center>

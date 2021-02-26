@@ -17,29 +17,33 @@ class Guarantor extends Model
             [
                 'label' => 'Full Name',
                 'name' => 'full_name',
-                // 'attributes' => 'required'
+                'attributes' => 'required'
             ],
             [
                 'label' => 'Profession',
-                'name' => 'profession'
+                'name' => 'profession',
+                'attributes' => 'required'
             ],
             [
                 'label' => 'NIC Number',
                 'name' => 'nic',
-                // 'attributes' => 'required'
+                'attributes' => 'required'
             ],
             [
                 'label' => 'Email',
                 'name' => 'email',
-                'type' => 'email'
+                'type' => 'email',
+                'attributes' => 'required'
             ],
             [
                 'label' => 'Address',
-                'name' => 'address'
+                'name' => 'address',
+                'attributes' => 'required'
             ],
             [
                 'label' => 'Phone Number',
-                'name' => 'phone_num'
+                'name' => 'phone_num',
+                'attributes' => 'required'
             ],
         ];
     }
