@@ -120,6 +120,9 @@ class Loan extends Model
 
         $diff = $date->diffInDays($now);
 
+        if ($diff <= 0)
+            return $this->full_loan_amount;
+
         return Common::getInCurrencyFormat($this->full_loan_amount / $diff);
     }
 
