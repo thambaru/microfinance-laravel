@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Libraries\Common;
+use App\Scopes\OwnerRoleScope;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +26,16 @@ class Loan extends Model
         'installments' => 'integer',
         'start_date' => 'date',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnerRoleScope);
+    }
 
     public static function entityFields()
     {

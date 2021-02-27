@@ -29,12 +29,12 @@ class PaymentsController extends Controller
         if ($request->has('from') && $request->has('to'))
             $payments = $payments->whereBetween('created_at', ["$request->from 00:00:00", "$request->to 23:59:59"]);
 
-        if (!$user->hasRole('rep') && $request->has('rep_id'))
+        if ($request->has('rep_id'))
             $payments = $payments->whereHas('rep', function ($q) use ($request) {
                 $q->where('id', $request->rep_id);
             });
 
-        $payments = $user->hasRole('rep') ? $payments->where('rep_id', $user->id)->get() : $payments->get();
+        $payments = $payments->get();
 
         return compact('payments');
     }

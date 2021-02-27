@@ -26,7 +26,9 @@ use App\Models\User;
 
       <form id="payment-filter-form" action="">
         @csrf
+
         <div class="row mb-3">
+          @role('admin')
           <div class="col-3">
             <select class="form-control" name="rep_id">
               <option value="">Filter by rep</option>
@@ -35,7 +37,8 @@ use App\Models\User;
               @endforeach
             </select>
           </div>
-
+          @endrole
+          
           <div class="col">
             <div class="form-check form-check-inline">
               <label class="mx-2" for="from">From</label>
@@ -83,7 +86,7 @@ use App\Models\User;
           {
             data: 'amount',
             className: 'dt-body-right',
-            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
+            render: $.fn.dataTable.render.number(',', '.', 2, 'Rs. ')
           },
           {
             data: 'created_at'
@@ -91,7 +94,7 @@ use App\Models\User;
           {
             data: 'loan.rental',
             className: 'dt-body-right',
-            render: $.fn.dataTable.render.number( ',', '.', 2, 'Rs. ' )
+            render: $.fn.dataTable.render.number(',', '.', 2, 'Rs. ')
           },
           {
             data: 'rep.name'

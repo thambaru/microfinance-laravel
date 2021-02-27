@@ -24,9 +24,7 @@ class LoanController extends Controller
 
         $user = User::find(Auth::id());
 
-        $loans = Loan::with('customer', 'guarantors');
-
-        $loans = $user->hasRole('rep') ? $loans->where('rep_id', $user->id)->get() : $loans->get();
+        $loans = Loan::with('customer', 'guarantors')->get();
 
         return compact('loans');
     }

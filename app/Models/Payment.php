@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnerRoleScope;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +18,16 @@ class Payment extends Model
     protected $casts = [
         'amount' => 'float',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnerRoleScope);
+    }
 
     public static function entityFields()
     {
