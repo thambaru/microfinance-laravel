@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libraries\Common;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -50,18 +51,26 @@ class UserController extends Controller
             'nic' => 'required',
             'address' => 'required',
             'commiss_perc' => 'required',
-            'email' => 'email' . $isEdit ? '' : '|unique:users',
-            'password' => 'required|confirmed|min:8'
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed|min:8',
+            'phone_num' => 'required|min:10',
         ];
 
-        $request->validate($fields);
-
         $user = $isEdit ? User::find($request->id) : new User();
+
+        if ($isEdit) {
+            if ($user->email != $request->email)
+                $fields['email'] = 'email|unique:users';
+            else
+                $fields['email'] = '';
+        }
+
+        $request->validate($fields);
 
         foreach ($fields as $field => $val)
             $user->$field = $request->$field;
 
-        $user->username = $request->email;
+        $user->username = Str::random(15);
         $user->password = Hash::make($request->password);
 
         $user->save();
